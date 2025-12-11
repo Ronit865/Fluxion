@@ -3,12 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { MainLayout } from "@/components/layout/MainLayout";
-import Dashboard from "./pages/Dashboard";
-import Timetable from "./pages/Timetable";
-import Tasks from "./pages/Tasks";
-import Analytics from "./pages/Analytics";
-import Profile from "./pages/Profile";
+import { BubbleLayout } from "@/components/layout/BubbleLayout";
+import HomePage from "./pages/HomePage";
+import AnalyticsPage from "./pages/AnalyticsPage";
+import RoutinePage from "./pages/RoutinePage";
+import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,12 +19,11 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/timetable" element={<Timetable />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/profile" element={<Profile />} />
+          <Route element={<BubbleLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/routine" element={<RoutinePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
