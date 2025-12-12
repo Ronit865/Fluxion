@@ -10,15 +10,17 @@ import {
 
 interface BubbleChartProps {
   data: Array<{ name: string; value: number; value2?: number }>;
-  color?: "lime" | "teal" | "coral";
+  color?: "orange" | "blue" | "aqua" | "purple" | "neon";
   showSecondary?: boolean;
 }
 
-export function BubbleAreaChart({ data, color = "lime", showSecondary = false }: BubbleChartProps) {
+export function BubbleAreaChart({ data, color = "orange", showSecondary = false }: BubbleChartProps) {
   const colorMap = {
-    lime: { stroke: "#D8FF2A", fill: "rgba(216,255,42,0.2)" },
-    teal: { stroke: "#8EE5D4", fill: "rgba(142,229,212,0.2)" },
-    coral: { stroke: "#FF8A65", fill: "rgba(255,138,101,0.2)" },
+    orange: { stroke: "#FF4F17", fill: "rgba(255,79,23,0.2)" },
+    blue: { stroke: "#2D8CFF", fill: "rgba(45,140,255,0.2)" },
+    aqua: { stroke: "#29E3C2", fill: "rgba(41,227,194,0.2)" },
+    purple: { stroke: "#845CFF", fill: "rgba(132,92,255,0.2)" },
+    neon: { stroke: "#B6FF2A", fill: "rgba(182,255,42,0.2)" },
   };
 
   return (
@@ -37,8 +39,8 @@ export function BubbleAreaChart({ data, color = "lime", showSecondary = false }:
             </linearGradient>
             {showSecondary && (
               <linearGradient id="gradient-secondary" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8EE5D4" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#8EE5D4" stopOpacity={0} />
+                <stop offset="5%" stopColor="#2D8CFF" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#2D8CFF" stopOpacity={0} />
               </linearGradient>
             )}
           </defs>
@@ -73,7 +75,7 @@ export function BubbleAreaChart({ data, color = "lime", showSecondary = false }:
             <Area
               type="monotone"
               dataKey="value2"
-              stroke="#8EE5D4"
+              stroke="#2D8CFF"
               strokeWidth={3}
               fillOpacity={1}
               fill="url(#gradient-secondary)"

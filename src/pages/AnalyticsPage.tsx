@@ -32,10 +32,10 @@ const weeklyData = [
 ];
 
 const subjectData = [
-  { name: "Math", hours: 12, fill: "#D8FF2A" },
-  { name: "CS", hours: 18, fill: "#8EE5D4" },
-  { name: "Physics", hours: 8, fill: "#FF8A65" },
-  { name: "Database", hours: 10, fill: "#FFEB3B" },
+  { name: "Math", hours: 12, fill: "#FF4F17" },
+  { name: "CS", hours: 18, fill: "#2D8CFF" },
+  { name: "Physics", hours: 8, fill: "#845CFF" },
+  { name: "Database", hours: 10, fill: "#29E3C2" },
 ];
 
 const skillsData = [
@@ -46,15 +46,9 @@ const skillsData = [
   { skill: "Git", level: 80 },
 ];
 
-const heatmapData = Array.from({ length: 7 }, (_, weekday) =>
-  Array.from({ length: 12 }, (_, week) => ({
-    weekday,
-    week,
-    value: Math.floor(Math.random() * 5),
-  }))
-).flat();
-
 export default function AnalyticsPage() {
+  const statColors = ["orange", "blue", "purple", "neon"] as const;
+  
   return (
     <div className="p-4 lg:p-8 max-w-6xl mx-auto">
       {/* Header */}
@@ -70,44 +64,58 @@ export default function AnalyticsPage() {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { icon: TrendingUp, label: "Total Hours", value: "127h", color: "lime", trend: "+12%" },
-          { icon: Target, label: "Goals Met", value: "8/10", color: "teal", trend: "+2" },
-          { icon: Award, label: "Best Streak", value: "12 days", color: "coral", trend: "New!" },
-          { icon: Brain, label: "Focus Score", value: "85%", color: "yellow", trend: "+5%" },
-        ].map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: index * 0.1 }}
-            className="bubble-sm p-5"
-          >
-            <stat.icon className={`w-5 h-5 mb-3 text-${stat.color === "lime" ? "neon-lime" : stat.color}`} />
-            <p className="text-sm text-muted-foreground">{stat.label}</p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl font-bold">{stat.value}</span>
-              <span className="text-xs text-neon-lime">{stat.trend}</span>
-            </div>
-          </motion.div>
-        ))}
+          { icon: TrendingUp, label: "Total Hours", value: "127h", color: "orange", trend: "+12%" },
+          { icon: Target, label: "Goals Met", value: "8/10", color: "blue", trend: "+2" },
+          { icon: Award, label: "Best Streak", value: "12 days", color: "purple", trend: "New!" },
+          { icon: Brain, label: "Focus Score", value: "85%", color: "neon", trend: "+5%" },
+        ].map((stat, index) => {
+          const widgetClasses = {
+            orange: "widget-orange",
+            blue: "widget-blue",
+            purple: "widget-purple",
+            neon: "widget-neon",
+          };
+          const textClasses = {
+            orange: "text-white",
+            blue: "text-white",
+            purple: "text-white",
+            neon: "text-charcoal",
+          };
+          return (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: index * 0.1 }}
+              className={`rounded-[1.5rem] p-5 hover-float ${widgetClasses[stat.color as keyof typeof widgetClasses]}`}
+            >
+              <stat.icon className={`w-5 h-5 mb-3 ${textClasses[stat.color as keyof typeof textClasses]}`} />
+              <p className={`text-sm opacity-80 ${textClasses[stat.color as keyof typeof textClasses]}`}>{stat.label}</p>
+              <div className="flex items-baseline gap-2">
+                <span className={`text-xl font-bold ${textClasses[stat.color as keyof typeof textClasses]}`}>{stat.value}</span>
+                <span className={`text-xs bg-white/20 px-2 py-0.5 rounded-full ${textClasses[stat.color as keyof typeof textClasses]}`}>{stat.trend}</span>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Charts Grid */}
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
         {/* Weekly Activity */}
-        <BubbleCard delay={0.2}>
+        <BubbleCard delay={0.2} glow="orange">
           <h3 className="font-semibold text-lg mb-4">Weekly Activity</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={weeklyData}>
                 <defs>
                   <linearGradient id="gradStudy" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#D8FF2A" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#D8FF2A" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#FF4F17" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#FF4F17" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="gradCoding" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8EE5D4" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#8EE5D4" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#2D8CFF" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#2D8CFF" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#6F6F6F", fontSize: 12 }} />
@@ -119,15 +127,15 @@ export default function AnalyticsPage() {
                     borderRadius: "16px",
                   }}
                 />
-                <Area type="monotone" dataKey="study" stroke="#D8FF2A" strokeWidth={3} fill="url(#gradStudy)" />
-                <Area type="monotone" dataKey="coding" stroke="#8EE5D4" strokeWidth={3} fill="url(#gradCoding)" />
+                <Area type="monotone" dataKey="study" stroke="#FF4F17" strokeWidth={3} fill="url(#gradStudy)" />
+                <Area type="monotone" dataKey="coding" stroke="#2D8CFF" strokeWidth={3} fill="url(#gradCoding)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </BubbleCard>
 
         {/* Subject Distribution */}
-        <BubbleCard delay={0.3}>
+        <BubbleCard delay={0.3} glow="purple">
           <h3 className="font-semibold text-lg mb-4">Subject Distribution</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -160,7 +168,7 @@ export default function AnalyticsPage() {
         </BubbleCard>
 
         {/* Skills Radar */}
-        <BubbleCard delay={0.4}>
+        <BubbleCard delay={0.4} glow="blue">
           <h3 className="font-semibold text-lg mb-4">Skills Overview</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -170,8 +178,8 @@ export default function AnalyticsPage() {
                 <Radar
                   name="Skills"
                   dataKey="level"
-                  stroke="#D8FF2A"
-                  fill="#D8FF2A"
+                  stroke="#845CFF"
+                  fill="#845CFF"
                   fillOpacity={0.3}
                 />
               </RadarChart>
@@ -180,7 +188,7 @@ export default function AnalyticsPage() {
         </BubbleCard>
 
         {/* Monthly Comparison */}
-        <BubbleCard delay={0.5}>
+        <BubbleCard delay={0.5} glow="aqua">
           <h3 className="font-semibold text-lg mb-4">Monthly Comparison</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -194,8 +202,8 @@ export default function AnalyticsPage() {
                     borderRadius: "16px",
                   }}
                 />
-                <Bar dataKey="study" fill="#D8FF2A" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="coding" fill="#8EE5D4" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="study" fill="#FF4F17" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="coding" fill="#29E3C2" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -221,7 +229,7 @@ export default function AnalyticsPage() {
                   <div
                     key={dayIndex}
                     className="w-4 h-4 rounded-sm"
-                    style={{ backgroundColor: `rgba(216, 255, 42, ${opacity})` }}
+                    style={{ backgroundColor: `rgba(255, 79, 23, ${opacity})` }}
                   />
                 );
               })}
@@ -234,7 +242,7 @@ export default function AnalyticsPage() {
             <div
               key={opacity}
               className="w-4 h-4 rounded-sm"
-              style={{ backgroundColor: `rgba(216, 255, 42, ${opacity})` }}
+              style={{ backgroundColor: `rgba(255, 79, 23, ${opacity})` }}
             />
           ))}
           <span>More</span>
@@ -246,19 +254,19 @@ export default function AnalyticsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="mt-6 p-6 rounded-[2rem] bg-gradient-to-r from-neon-lime/20 to-teal/20 border border-neon-lime/30"
+        className="mt-6 p-6 rounded-[2rem] gradient-orange glow-orange"
       >
         <div className="flex items-center gap-4">
-          <div className="p-4 rounded-2xl bg-neon-lime shadow-glow-lime">
-            <Flame className="w-8 h-8 text-charcoal" />
+          <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
+            <Flame className="w-8 h-8 text-white" />
           </div>
           <div className="flex-1">
-            <h3 className="text-xl font-bold mb-1">12 Day Streak! 🔥</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-xl font-bold mb-1 text-white">12 Day Streak! 🔥</h3>
+            <p className="text-white/80">
               You're on fire! Keep up the great work to reach your 30-day goal.
             </p>
           </div>
-          <BubbleProgress value={40} size={80} color="lime" showValue={false} />
+          <BubbleProgress value={40} size={80} color="yellow" showValue={false} />
         </div>
       </motion.div>
     </div>
