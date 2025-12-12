@@ -4,7 +4,7 @@ interface BubbleProgressProps {
   value: number;
   size?: number;
   strokeWidth?: number;
-  color?: "lime" | "teal" | "coral";
+  color?: "orange" | "blue" | "aqua" | "purple" | "neon" | "yellow" | "red";
   label?: string;
   showValue?: boolean;
 }
@@ -13,7 +13,7 @@ export function BubbleProgress({
   value,
   size = 120,
   strokeWidth = 12,
-  color = "lime",
+  color = "orange",
   label,
   showValue = true,
 }: BubbleProgressProps) {
@@ -22,15 +22,23 @@ export function BubbleProgress({
   const offset = circumference - (value / 100) * circumference;
 
   const colorMap = {
-    lime: "#D8FF2A",
-    teal: "#8EE5D4",
-    coral: "#FF8A65",
+    orange: "#FF4F17",
+    blue: "#2D8CFF",
+    aqua: "#29E3C2",
+    purple: "#845CFF",
+    neon: "#B6FF2A",
+    yellow: "#FFD600",
+    red: "#FF2E35",
   };
 
   const glowMap = {
-    lime: "drop-shadow(0 0 10px rgba(216,255,42,0.5))",
-    teal: "drop-shadow(0 0 10px rgba(142,229,212,0.5))",
-    coral: "drop-shadow(0 0 10px rgba(255,138,101,0.5))",
+    orange: "drop-shadow(0 0 12px rgba(255,79,23,0.5))",
+    blue: "drop-shadow(0 0 12px rgba(45,140,255,0.5))",
+    aqua: "drop-shadow(0 0 12px rgba(41,227,194,0.5))",
+    purple: "drop-shadow(0 0 12px rgba(132,92,255,0.5))",
+    neon: "drop-shadow(0 0 12px rgba(182,255,42,0.5))",
+    yellow: "drop-shadow(0 0 12px rgba(255,214,0,0.5))",
+    red: "drop-shadow(0 0 12px rgba(255,46,53,0.5))",
   };
 
   return (
@@ -74,21 +82,25 @@ export function BubbleProgress({
 
 interface LinearBubbleProgressProps {
   value: number;
-  color?: "lime" | "teal" | "coral";
+  color?: "orange" | "blue" | "aqua" | "purple" | "neon" | "yellow" | "red";
   label?: string;
   showValue?: boolean;
 }
 
 export function LinearBubbleProgress({
   value,
-  color = "lime",
+  color = "orange",
   label,
   showValue = true,
 }: LinearBubbleProgressProps) {
-  const colorClasses = {
-    lime: "bg-neon-lime",
-    teal: "bg-teal",
-    coral: "bg-coral",
+  const gradientClasses = {
+    orange: "gradient-orange",
+    blue: "gradient-blue",
+    aqua: "gradient-aqua",
+    purple: "gradient-purple",
+    neon: "gradient-neon",
+    yellow: "gradient-yellow",
+    red: "bg-red",
   };
 
   return (
@@ -101,7 +113,7 @@ export function LinearBubbleProgress({
       )}
       <div className="h-3 bg-secondary rounded-full overflow-hidden">
         <motion.div
-          className={`h-full rounded-full ${colorClasses[color]}`}
+          className={`h-full rounded-full ${gradientClasses[color]}`}
           initial={{ width: 0 }}
           animate={{ width: `${value}%` }}
           transition={{ duration: 1, ease: "easeOut" }}
