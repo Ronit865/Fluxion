@@ -103,7 +103,7 @@ export default function AnalyticsPage() {
       {/* Charts Grid */}
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
         {/* Weekly Activity */}
-        <BubbleCard delay={0.2} glow="orange">
+        <BubbleCard delay={0.2}>
           <h3 className="font-semibold text-lg mb-4">Weekly Activity</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -135,7 +135,7 @@ export default function AnalyticsPage() {
         </BubbleCard>
 
         {/* Subject Distribution */}
-        <BubbleCard delay={0.3} glow="purple">
+        <BubbleCard delay={0.3}>
           <h3 className="font-semibold text-lg mb-4">Subject Distribution</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -168,7 +168,7 @@ export default function AnalyticsPage() {
         </BubbleCard>
 
         {/* Skills Radar */}
-        <BubbleCard delay={0.4} glow="blue">
+        <BubbleCard delay={0.4}>
           <h3 className="font-semibold text-lg mb-4">Skills Overview</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -188,7 +188,7 @@ export default function AnalyticsPage() {
         </BubbleCard>
 
         {/* Monthly Comparison */}
-        <BubbleCard delay={0.5} glow="aqua">
+        <BubbleCard delay={0.5}>
           <h3 className="font-semibold text-lg mb-4">Monthly Comparison</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">

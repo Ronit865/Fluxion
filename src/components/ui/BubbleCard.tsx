@@ -6,50 +6,26 @@ interface BubbleCardProps {
   children: React.ReactNode;
   className?: string;
   delay?: number;
-  glow?: "orange" | "blue" | "aqua" | "purple" | "neon" | "yellow" | "none";
   hover?: boolean;
-  variant?: "default" | "gradient";
-  gradientColor?: "orange" | "blue" | "aqua" | "purple" | "neon" | "yellow";
+  variant?: "default" | "dark";
 }
 
 export function BubbleCard({
   children,
   className,
   delay = 0,
-  glow = "none",
   hover = true,
   variant = "default",
-  gradientColor,
 }: BubbleCardProps) {
-  const glowClasses = {
-    orange: "hover:shadow-glow-orange",
-    blue: "hover:shadow-glow-blue",
-    aqua: "hover:shadow-glow-aqua",
-    purple: "hover:shadow-glow-purple",
-    neon: "hover:shadow-glow-neon",
-    yellow: "hover:shadow-glow-yellow",
-    none: "",
-  };
-
-  const gradientClasses = {
-    orange: "widget-orange text-white",
-    blue: "widget-blue text-white",
-    aqua: "widget-aqua text-charcoal",
-    purple: "widget-purple text-white",
-    neon: "widget-neon text-charcoal",
-    yellow: "widget-yellow text-charcoal",
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.5, delay, type: "spring", stiffness: 200 }}
+      transition={{ duration: 0.4, delay, type: "spring", stiffness: 200 }}
       className={cn(
-        "bubble p-6",
-        hover && "hover-float",
-        glowClasses[glow],
-        variant === "gradient" && gradientColor && gradientClasses[gradientColor],
+        "bubble p-5",
+        hover && "hover:shadow-floating transition-shadow",
+        variant === "dark" && "bg-charcoal text-white border-charcoal",
         className
       )}
     >
@@ -65,7 +41,6 @@ interface StatBubbleProps {
   subtext?: string;
   color?: "orange" | "blue" | "aqua" | "purple" | "neon" | "yellow" | "red";
   delay?: number;
-  variant?: "default" | "widget";
 }
 
 export function StatBubble({
@@ -75,81 +50,51 @@ export function StatBubble({
   subtext,
   color = "orange",
   delay = 0,
-  variant = "widget",
 }: StatBubbleProps) {
-  const widgetClasses = {
-    orange: "widget-orange",
-    blue: "widget-blue",
-    aqua: "widget-aqua",
-    purple: "widget-purple",
-    neon: "widget-neon",
-    yellow: "widget-yellow",
-    red: "widget-red",
-  };
-
-  const textColorClasses = {
-    orange: "text-white",
-    blue: "text-white",
-    aqua: "text-charcoal",
-    purple: "text-white",
-    neon: "text-charcoal",
-    yellow: "text-charcoal",
-    red: "text-white",
-  };
-
-  const subtextClasses = {
-    orange: "bg-white/20 text-white",
-    blue: "bg-white/20 text-white",
-    aqua: "bg-charcoal/10 text-charcoal",
-    purple: "bg-white/20 text-white",
-    neon: "bg-charcoal/10 text-charcoal",
-    yellow: "bg-charcoal/10 text-charcoal",
-    red: "bg-white/20 text-white",
-  };
-
-  if (variant === "widget") {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, delay, type: "spring", stiffness: 200 }}
-        className={cn(
-          "rounded-[1.5rem] p-5 hover-float transition-all",
-          widgetClasses[color]
-        )}
-      >
-        <div className="flex items-start justify-between mb-3">
-          <div className="p-2.5 rounded-2xl bg-white/20 backdrop-blur-sm">
-            <Icon className={cn("w-5 h-5", textColorClasses[color])} />
-          </div>
-        </div>
-        <p className={cn("text-sm mb-1 opacity-80", textColorClasses[color])}>{label}</p>
-        <p className={cn("text-2xl font-bold", textColorClasses[color])}>{value}</p>
-        {subtext && (
-          <p className={cn("text-xs mt-1 px-2 py-0.5 rounded-full inline-block", subtextClasses[color])}>
-            {subtext}
-          </p>
-        )}
-      </motion.div>
-    );
-  }
-
+  // Dark card style like reference images
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.5, delay, type: "spring", stiffness: 200 }}
-      className="bubble-sm p-5 hover-float"
+      transition={{ duration: 0.4, delay, type: "spring", stiffness: 200 }}
+      className="rounded-2xl p-4 bg-charcoal text-white border border-charcoal hover:shadow-floating transition-shadow"
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className={cn("p-2.5 rounded-2xl", widgetClasses[color])}>
-          <Icon className={cn("w-5 h-5", textColorClasses[color])} />
+      <div className="flex items-start justify-between mb-2">
+        <div className={cn(
+          "p-2 rounded-xl",
+          color === "orange" && "bg-orange/20",
+          color === "blue" && "bg-blue/20",
+          color === "aqua" && "bg-aqua/20",
+          color === "purple" && "bg-purple/20",
+          color === "neon" && "bg-neon-green/20",
+          color === "yellow" && "bg-yellow/20",
+          color === "red" && "bg-red/20",
+        )}>
+          <Icon className={cn(
+            "w-4 h-4",
+            color === "orange" && "text-orange",
+            color === "blue" && "text-blue",
+            color === "aqua" && "text-aqua",
+            color === "purple" && "text-purple",
+            color === "neon" && "text-neon-green",
+            color === "yellow" && "text-yellow",
+            color === "red" && "text-red",
+          )} />
         </div>
       </div>
-      <p className="text-sm text-muted-foreground mb-1">{label}</p>
-      <p className="text-2xl font-bold">{value}</p>
+      <p className="text-xs text-white/60 mb-0.5">{label}</p>
+      <p className="text-xl font-bold">{value}</p>
       {subtext && (
-        <p className={cn("text-xs mt-1 px-2 py-0.5 rounded-full inline-block bg-primary/10 text-primary")}>
+        <p className={cn(
+          "text-xs mt-1 px-2 py-0.5 rounded-full inline-block",
+          color === "orange" && "bg-orange/20 text-orange",
+          color === "blue" && "bg-blue/20 text-blue",
+          color === "aqua" && "bg-aqua/20 text-aqua",
+          color === "purple" && "bg-purple/20 text-purple",
+          color === "neon" && "bg-neon-green/20 text-neon-green",
+          color === "yellow" && "bg-yellow/20 text-yellow",
+          color === "red" && "bg-red/20 text-red",
+        )}>
           {subtext}
         </p>
       )}

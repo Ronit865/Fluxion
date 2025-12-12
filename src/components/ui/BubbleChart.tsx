@@ -25,10 +25,10 @@ export function BubbleAreaChart({ data, color = "orange", showSecondary = false 
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-      className="h-64 w-full"
+      transition={{ duration: 0.4 }}
+      className="h-full w-full"
     >
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data}>

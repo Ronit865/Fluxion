@@ -10,66 +10,58 @@
 
 @layer base {
   :root {
-    /* Core Palette */
-    --background: 40 23% 95%; /* Soft Cream #F7F3EB */
+    /* Core Palette - Soft Beige Theme */
+    --background: 45 30% 92%; /* Soft Beige */
     --foreground: 0 0% 10%; /* Charcoal #1A1A1A */
 
-    --card: 0 0% 100%; /* White #FFFFFF */
+    --card: 45 25% 96%; /* Light Cream */
     --card-foreground: 0 0% 10%;
 
-    --popover: 40 20% 96%; /* Light Beige #F0EDE7 */
+    --popover: 45 25% 96%;
     --popover-foreground: 0 0% 10%;
 
     --primary: 18 100% 55%; /* Orange #FF4F17 */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 40 14% 90%; /* Warm Gray #E5E3DE */
+    --secondary: 45 20% 88%; /* Warm Beige */
     --secondary-foreground: 0 0% 10%;
 
-    --muted: 40 10% 95%; /* Pale Gray #F3F3F1 */
-    --muted-foreground: 0 0% 43%; /* Medium Gray #6F6F6F */
+    --muted: 45 15% 90%;
+    --muted-foreground: 0 0% 43%;
 
-    --accent: 166 80% 52%; /* Aqua #29E3C2 */
+    --accent: 166 80% 52%; /* Aqua */
     --accent-foreground: 0 0% 10%;
 
-    --destructive: 358 100% 59%; /* Red #FF2E35 */
+    --destructive: 358 100% 59%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 36 10% 81%; /* Border #D3D0CB */
-    --input: 36 10% 81%;
+    --border: 45 15% 82%; /* Soft border */
+    --input: 45 15% 82%;
     --ring: 18 100% 55%;
 
-    --radius: 1.5rem;
+    --radius: 1rem;
 
-    /* Extended Vibrant Palette */
-    --ivory: 60 33% 97%; /* #FAFAF6 */
-    --orange: 18 100% 55%; /* #FF4F17 */
-    --blue: 212 100% 59%; /* #2D8CFF */
-    --yellow: 50 100% 50%; /* #FFD600 */
-    --red: 358 100% 59%; /* #FF2E35 */
-    --aqua: 166 80% 52%; /* #29E3C2 */
-    --purple: 255 100% 62%; /* #845CFF */
-    --neon-green: 76 100% 57%; /* #B6FF2A */
-    --teal: 166 62% 73%; /* #8EE5D4 */
-    --coral: 14 100% 70%; /* #FF8A65 */
-    --charcoal: 0 0% 10%; /* #1A1A1A */
-    --medium-gray: 0 0% 43%; /* #6F6F6F */
+    /* Extended Palette */
+    --cream: 45 35% 94%;
+    --ivory: 60 33% 97%;
+    --orange: 18 100% 55%;
+    --blue: 212 100% 59%;
+    --yellow: 50 100% 50%;
+    --red: 358 100% 59%;
+    --aqua: 166 80% 52%;
+    --purple: 255 100% 62%;
+    --neon-green: 76 100% 57%;
+    --teal: 166 62% 73%;
+    --coral: 14 100% 70%;
+    --charcoal: 0 0% 10%;
+    --medium-gray: 0 0% 43%;
 
-    /* Shadows */
-    --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
-    --shadow-floating: 0 8px 32px rgba(0,0,0,0.12);
-    --shadow-bubble: 0 12px 40px rgba(0,0,0,0.1);
-    --shadow-neumorphic: 8px 8px 16px rgba(0,0,0,0.08), -8px -8px 16px rgba(255,255,255,0.9);
-    --shadow-neumorphic-inset: inset 4px 4px 8px rgba(0,0,0,0.06), inset -4px -4px 8px rgba(255,255,255,0.7);
-
-    /* Glows */
-    --glow-orange: 0 0 30px rgba(255,79,23,0.4);
-    --glow-blue: 0 0 30px rgba(45,140,255,0.4);
-    --glow-aqua: 0 0 30px rgba(41,227,194,0.4);
-    --glow-purple: 0 0 30px rgba(132,92,255,0.4);
-    --glow-neon: 0 0 30px rgba(182,255,42,0.4);
-    --glow-yellow: 0 0 30px rgba(255,214,0,0.4);
-    --glow-red: 0 0 30px rgba(255,46,53,0.4);
+    /* Minimal Shadows */
+    --shadow-soft: 0 2px 8px rgba(0,0,0,0.04);
+    --shadow-floating: 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-bubble: 0 4px 20px rgba(0,0,0,0.05);
+    --shadow-neumorphic: 4px 4px 8px rgba(0,0,0,0.04), -4px -4px 8px rgba(255,255,255,0.8);
+    --shadow-neumorphic-inset: inset 2px 2px 4px rgba(0,0,0,0.04), inset -2px -2px 4px rgba(255,255,255,0.6);
   }
 
   .dark {
@@ -107,14 +99,14 @@
 }
 
 @layer utilities {
-  /* Bubble & Pill Shapes */
+  /* Bubble & Pill Shapes - Soft Rounded with Light Borders */
   .bubble {
-    @apply rounded-[2rem] bg-card shadow-bubble transition-all duration-300;
-    box-shadow: var(--shadow-bubble);
+    @apply rounded-2xl bg-card border border-border transition-all duration-300;
+    box-shadow: var(--shadow-soft);
   }
 
   .bubble-sm {
-    @apply rounded-[1.5rem] bg-card;
+    @apply rounded-xl bg-card border border-border;
     box-shadow: var(--shadow-soft);
   }
 
