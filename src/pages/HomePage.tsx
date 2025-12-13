@@ -3,6 +3,7 @@ import { Zap, Clock, Target, Sparkles, ChevronRight, Sun, Moon } from "lucide-re
 import { BubbleCard, StatBubble } from "@/components/ui/BubbleCard";
 import { BubbleProgress, LinearBubbleProgress } from "@/components/ui/BubbleProgress";
 import { BubbleAreaChart } from "@/components/ui/BubbleChart";
+import { RecordingCard } from "@/components/ui/RecordingCard";
 
 const chartData = [
   { name: "Mon", value: 4, value2: 3 },
@@ -124,19 +125,10 @@ export default function HomePage() {
           </div>
         </BubbleCard>
 
-        {/* Focus Score */}
-        <BubbleCard delay={0.4} className="p-4">
-          <div className="text-center">
-            <h3 className="font-semibold mb-1">Focus Score</h3>
-            <p className="text-xs text-muted-foreground mb-3">Today's performance</p>
-            <div className="flex justify-center mb-2">
-              <BubbleProgress value={85} size={100} strokeWidth={10} color="aqua" label="Focus" />
-            </div>
-            <p className="text-xs text-muted-foreground">
-              <span className="text-orange font-medium">+12%</span> from yesterday
-            </p>
-          </div>
-        </BubbleCard>
+        {/* Recording Card */}
+        <div className="flex items-center justify-center p-4">
+          <RecordingCard />
+        </div>
       </div>
 
       {/* Tasks & Progress - Compact */}
