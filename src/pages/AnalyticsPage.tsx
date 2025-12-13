@@ -18,7 +18,7 @@ import {
   Legend,
 } from "recharts";
 import { TrendingUp, Target, Award, Brain, Flame, Calendar } from "lucide-react";
-import { BubbleCard } from "@/components/ui/BubbleCard";
+import { BubbleCard, StatBubble } from "@/components/ui/BubbleCard";
 import { BubbleProgress } from "@/components/ui/BubbleProgress";
 
 const weeklyData = [
@@ -47,8 +47,6 @@ const skillsData = [
 ];
 
 export default function AnalyticsPage() {
-  const statColors = ["orange", "blue", "purple", "neon"] as const;
-  
   return (
     <div className="p-4 lg:p-8 max-w-6xl mx-auto">
       {/* Header */}
@@ -63,48 +61,17 @@ export default function AnalyticsPage() {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[
-          { icon: TrendingUp, label: "Total Hours", value: "127h", color: "orange", trend: "+12%" },
-          { icon: Target, label: "Goals Met", value: "8/10", color: "blue", trend: "+2" },
-          { icon: Award, label: "Best Streak", value: "12 days", color: "purple", trend: "New!" },
-          { icon: Brain, label: "Focus Score", value: "85%", color: "neon", trend: "+5%" },
-        ].map((stat, index) => {
-          const widgetClasses = {
-            orange: "widget-orange",
-            blue: "widget-blue",
-            purple: "widget-purple",
-            neon: "widget-neon",
-          };
-          const textClasses = {
-            orange: "text-white",
-            blue: "text-white",
-            purple: "text-white",
-            neon: "text-charcoal",
-          };
-          return (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              className={`rounded-[1.5rem] p-5 hover-float ${widgetClasses[stat.color as keyof typeof widgetClasses]}`}
-            >
-              <stat.icon className={`w-5 h-5 mb-3 ${textClasses[stat.color as keyof typeof textClasses]}`} />
-              <p className={`text-sm opacity-80 ${textClasses[stat.color as keyof typeof textClasses]}`}>{stat.label}</p>
-              <div className="flex items-baseline gap-2">
-                <span className={`text-xl font-bold ${textClasses[stat.color as keyof typeof textClasses]}`}>{stat.value}</span>
-                <span className={`text-xs bg-white/20 px-2 py-0.5 rounded-full ${textClasses[stat.color as keyof typeof textClasses]}`}>{stat.trend}</span>
-              </div>
-            </motion.div>
-          );
-        })}
+        <StatBubble icon={TrendingUp} label="Total Hours" value="127h" subtext="+12%" color="orange" delay={0} />
+        <StatBubble icon={Target} label="Goals Met" value="8/10" subtext="+2" color="blue" delay={0.1} />
+        <StatBubble icon={Award} label="Best Streak" value="12 days" subtext="New!" color="purple" delay={0.2} />
+        <StatBubble icon={Brain} label="Focus Score" value="85%" subtext="+5%" color="neon" delay={0.3} />
       </div>
 
       {/* Charts Grid */}
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
         {/* Weekly Activity */}
-        <BubbleCard delay={0.2}>
-          <h3 className="font-semibold text-lg mb-4">Weekly Activity</h3>
+        <BubbleCard delay={0.2} className="p-5">
+          <h3 className="font-semibold text-lg mb-4 text-white">Weekly Activity</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={weeklyData}>
@@ -118,13 +85,14 @@ export default function AnalyticsPage() {
                     <stop offset="95%" stopColor="#2D8CFF" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#6F6F6F", fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: "#6F6F6F", fontSize: 12 }} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#FFFFFF",
-                    border: "1px solid #D3D0CB",
+                    backgroundColor: "#1A1A1A",
+                    border: "1px solid rgba(255,255,255,0.1)",
                     borderRadius: "16px",
+                    color: "#fff",
                   }}
                 />
                 <Area type="monotone" dataKey="study" stroke="#FF4F17" strokeWidth={3} fill="url(#gradStudy)" />
@@ -135,8 +103,8 @@ export default function AnalyticsPage() {
         </BubbleCard>
 
         {/* Subject Distribution */}
-        <BubbleCard delay={0.3}>
-          <h3 className="font-semibold text-lg mb-4">Subject Distribution</h3>
+        <BubbleCard delay={0.3} className="p-5">
+          <h3 className="font-semibold text-lg mb-4 text-white">Subject Distribution</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -156,25 +124,26 @@ export default function AnalyticsPage() {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#FFFFFF",
-                    border: "1px solid #D3D0CB",
+                    backgroundColor: "#1A1A1A",
+                    border: "1px solid rgba(255,255,255,0.1)",
                     borderRadius: "16px",
+                    color: "#fff",
                   }}
                 />
-                <Legend />
+                <Legend wrapperStyle={{ color: "rgba(255,255,255,0.7)" }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </BubbleCard>
 
         {/* Skills Radar */}
-        <BubbleCard delay={0.4}>
-          <h3 className="font-semibold text-lg mb-4">Skills Overview</h3>
+        <BubbleCard delay={0.4} className="p-5">
+          <h3 className="font-semibold text-lg mb-4 text-white">Skills Overview</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={skillsData}>
-                <PolarGrid stroke="#D3D0CB" />
-                <PolarAngleAxis dataKey="skill" tick={{ fill: "#6F6F6F", fontSize: 12 }} />
+                <PolarGrid stroke="rgba(255,255,255,0.2)" />
+                <PolarAngleAxis dataKey="skill" tick={{ fill: "rgba(255,255,255,0.6)", fontSize: 12 }} />
                 <Radar
                   name="Skills"
                   dataKey="level"
@@ -188,18 +157,19 @@ export default function AnalyticsPage() {
         </BubbleCard>
 
         {/* Monthly Comparison */}
-        <BubbleCard delay={0.5}>
-          <h3 className="font-semibold text-lg mb-4">Monthly Comparison</h3>
+        <BubbleCard delay={0.5} className="p-5">
+          <h3 className="font-semibold text-lg mb-4 text-white">Monthly Comparison</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={weeklyData}>
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#6F6F6F", fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: "#6F6F6F", fontSize: 12 }} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 12 }} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#FFFFFF",
-                    border: "1px solid #D3D0CB",
+                    backgroundColor: "#1A1A1A",
+                    border: "1px solid rgba(255,255,255,0.1)",
                     borderRadius: "16px",
+                    color: "#fff",
                   }}
                 />
                 <Bar dataKey="study" fill="#FF4F17" radius={[8, 8, 0, 0]} />
@@ -211,12 +181,12 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Activity Heatmap */}
-      <BubbleCard delay={0.6}>
+      <BubbleCard delay={0.6} className="p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-lg">Activity Heatmap</h3>
+          <h3 className="font-semibold text-lg text-white">Activity Heatmap</h3>
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Last 12 weeks</span>
+            <Calendar className="w-4 h-4 text-white/50" />
+            <span className="text-sm text-white/50">Last 12 weeks</span>
           </div>
         </div>
         <div className="flex gap-1 overflow-x-auto pb-2">
@@ -236,7 +206,7 @@ export default function AnalyticsPage() {
             </div>
           ))}
         </div>
-        <div className="flex items-center gap-2 mt-4 text-xs text-muted-foreground">
+        <div className="flex items-center gap-2 mt-4 text-xs text-white/50">
           <span>Less</span>
           {[0.1, 0.3, 0.5, 0.7, 0.9].map((opacity) => (
             <div
@@ -254,7 +224,7 @@ export default function AnalyticsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="mt-6 p-6 rounded-[2rem] gradient-orange glow-orange"
+        className="mt-6 p-6 rounded-3xl gradient-orange glow-orange"
       >
         <div className="flex items-center gap-4">
           <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">

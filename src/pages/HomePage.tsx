@@ -3,7 +3,6 @@ import { Zap, Clock, Target, Sparkles, ChevronRight, Sun, Moon } from "lucide-re
 import { BubbleCard, StatBubble } from "@/components/ui/BubbleCard";
 import { BubbleProgress, LinearBubbleProgress } from "@/components/ui/BubbleProgress";
 import { BubbleAreaChart } from "@/components/ui/BubbleChart";
-import { RecordingCard } from "@/components/ui/RecordingCard";
 
 const chartData = [
   { name: "Mon", value: 4, value2: 3 },
@@ -51,14 +50,14 @@ export default function HomePage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", delay: 0.2 }}
-            className="hidden lg:flex items-center gap-3 px-4 py-2 bg-card border border-border rounded-full"
+            className="hidden lg:flex items-center gap-3 px-4 py-2 bg-charcoal border border-charcoal rounded-full"
           >
             <div className="w-9 h-9 rounded-full gradient-orange flex items-center justify-center">
               <span className="text-sm font-bold text-white">A</span>
             </div>
             <div>
-              <p className="font-semibold text-sm">Alex Johnson</p>
-              <p className="text-xs text-muted-foreground">Student + Developer</p>
+              <p className="font-semibold text-sm text-white">Alex Johnson</p>
+              <p className="text-xs text-white/60">Student + Developer</p>
             </div>
           </motion.div>
         </div>
@@ -106,17 +105,17 @@ export default function HomePage() {
         <BubbleCard className="lg:col-span-2 p-4" delay={0.3}>
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="font-semibold">Weekly Activity</h3>
-              <p className="text-xs text-muted-foreground">Study & Coding hours</p>
+              <h3 className="font-semibold text-white">Weekly Activity</h3>
+              <p className="text-xs text-white/60">Study & Coding hours</p>
             </div>
             <div className="flex items-center gap-3 text-xs">
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-orange" />
-                <span className="text-muted-foreground">Study</span>
+                <span className="text-white/60">Study</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-blue" />
-                <span className="text-muted-foreground">Coding</span>
+                <span className="text-white/60">Coding</span>
               </div>
             </div>
           </div>
@@ -125,10 +124,19 @@ export default function HomePage() {
           </div>
         </BubbleCard>
 
-        {/* Recording Card */}
-        <div className="flex items-center justify-center p-4">
-          <RecordingCard />
-        </div>
+        {/* Focus Score */}
+        <BubbleCard delay={0.4} className="p-4">
+          <div className="text-center">
+            <h3 className="font-semibold text-white mb-1">Focus Score</h3>
+            <p className="text-xs text-white/60 mb-3">Today's performance</p>
+            <div className="flex justify-center mb-2">
+              <BubbleProgress value={85} size={100} strokeWidth={10} color="aqua" label="Focus" />
+            </div>
+            <p className="text-xs text-white/60">
+              <span className="text-orange font-medium">+12%</span> from yesterday
+            </p>
+          </div>
+        </BubbleCard>
       </div>
 
       {/* Tasks & Progress - Compact */}
@@ -136,8 +144,8 @@ export default function HomePage() {
         {/* Today's Tasks */}
         <BubbleCard delay={0.5} className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold">Today's Tasks</h3>
-            <span className="px-2 py-1 bg-orange/10 text-orange text-xs font-medium rounded-full">2/3 done</span>
+            <h3 className="font-semibold text-white">Today's Tasks</h3>
+            <span className="px-2 py-1 bg-orange/20 text-orange text-xs font-medium rounded-full">2/3 done</span>
           </div>
           <div className="space-y-2">
             {tasks.map((task, index) => {
@@ -159,15 +167,15 @@ export default function HomePage() {
                   transition={{ delay: 0.6 + index * 0.1 }}
                   className={`flex items-center gap-2 p-2.5 rounded-xl transition-all border ${
                     task.completed 
-                      ? "bg-secondary/50 border-transparent" 
-                      : `bg-card ${colorClasses[task.color as keyof typeof colorClasses]}`
+                      ? "bg-white/5 border-transparent" 
+                      : `bg-white/10 ${colorClasses[task.color as keyof typeof colorClasses]}`
                   }`}
                 >
                   <div
                     className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
                       task.completed
                         ? checkClasses[task.color as keyof typeof checkClasses]
-                        : "border-muted-foreground"
+                        : "border-white/40"
                     }`}
                   >
                     {task.completed && (
@@ -176,10 +184,10 @@ export default function HomePage() {
                       </svg>
                     )}
                   </div>
-                  <p className={`flex-1 text-sm ${task.completed && "line-through text-muted-foreground"}`}>
+                  <p className={`flex-1 text-sm text-white ${task.completed && "line-through text-white/50"}`}>
                     {task.title}
                   </p>
-                  <span className="px-2 py-0.5 bg-secondary text-xs text-muted-foreground rounded-full">
+                  <span className="px-2 py-0.5 bg-white/10 text-xs text-white/60 rounded-full">
                     {task.time}
                   </span>
                 </motion.div>
@@ -191,7 +199,7 @@ export default function HomePage() {
         {/* Weekly Progress */}
         <BubbleCard delay={0.6} className="p-4">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold">Weekly Progress</h3>
+            <h3 className="font-semibold text-white">Weekly Progress</h3>
             <button className="flex items-center gap-1 text-xs text-orange hover:underline">
               View all <ChevronRight className="w-3 h-3" />
             </button>
@@ -203,7 +211,7 @@ export default function HomePage() {
           </div>
 
           <motion.div 
-            className="mt-4 p-3 rounded-xl bg-charcoal"
+            className="mt-4 p-3 rounded-xl bg-white/5"
             whileHover={{ scale: 1.01 }}
             transition={{ type: "spring", stiffness: 400 }}
           >

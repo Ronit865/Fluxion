@@ -7,7 +7,6 @@ interface BubbleCardProps {
   className?: string;
   delay?: number;
   hover?: boolean;
-  variant?: "default" | "dark";
 }
 
 export function BubbleCard({
@@ -15,7 +14,6 @@ export function BubbleCard({
   className,
   delay = 0,
   hover = true,
-  variant = "default",
 }: BubbleCardProps) {
   return (
     <motion.div
@@ -23,9 +21,8 @@ export function BubbleCard({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.4, delay, type: "spring", stiffness: 200 }}
       className={cn(
-        "bubble p-5",
+        "rounded-3xl bg-charcoal border border-charcoal",
         hover && "hover:shadow-floating transition-shadow",
-        variant === "dark" && "bg-charcoal text-white border-charcoal",
         className
       )}
     >
@@ -51,17 +48,16 @@ export function StatBubble({
   color = "orange",
   delay = 0,
 }: StatBubbleProps) {
-  // Dark card style like reference images
   return (
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.4, delay, type: "spring", stiffness: 200 }}
-      className="rounded-2xl p-4 bg-charcoal text-white border border-charcoal hover:shadow-floating transition-shadow"
+      className="rounded-3xl p-4 bg-charcoal text-white hover:shadow-floating transition-shadow"
     >
-      <div className="flex items-start justify-between mb-2">
+      <div className="mb-3">
         <div className={cn(
-          "p-2 rounded-xl",
+          "w-10 h-10 rounded-xl flex items-center justify-center",
           color === "orange" && "bg-orange/20",
           color === "blue" && "bg-blue/20",
           color === "aqua" && "bg-aqua/20",
@@ -71,7 +67,7 @@ export function StatBubble({
           color === "red" && "bg-red/20",
         )}>
           <Icon className={cn(
-            "w-4 h-4",
+            "w-5 h-5",
             color === "orange" && "text-orange",
             color === "blue" && "text-blue",
             color === "aqua" && "text-aqua",
@@ -82,11 +78,11 @@ export function StatBubble({
           )} />
         </div>
       </div>
-      <p className="text-xs text-white/60 mb-0.5">{label}</p>
-      <p className="text-xl font-bold">{value}</p>
+      <p className="text-sm text-white/60 mb-1">{label}</p>
+      <p className="text-2xl font-bold mb-2">{value}</p>
       {subtext && (
-        <p className={cn(
-          "text-xs mt-1 px-2 py-0.5 rounded-full inline-block",
+        <span className={cn(
+          "text-xs px-2.5 py-1 rounded-full inline-block font-medium",
           color === "orange" && "bg-orange/20 text-orange",
           color === "blue" && "bg-blue/20 text-blue",
           color === "aqua" && "bg-aqua/20 text-aqua",
@@ -96,7 +92,7 @@ export function StatBubble({
           color === "red" && "bg-red/20 text-red",
         )}>
           {subtext}
-        </p>
+        </span>
       )}
     </motion.div>
   );
