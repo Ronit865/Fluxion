@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Heart } from "lucide-react";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -17,17 +18,17 @@ export function FloatingNav() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
+      className="fixed top-0 left-0 right-0 z-50 px-8 py-4"
     >
-      <div className="flex items-center gap-1 px-2 py-2 bg-charcoal rounded-full shadow-floating">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="px-4 py-2">
-          <span className="text-white font-bold text-sm">routine</span>
-          <span className="text-orange text-xs ml-0.5">•</span>
+        <div className="flex items-center gap-1">
+          <span className="text-charcoal font-bold text-xl">routine</span>
+          <Heart className="w-4 h-4 text-orange fill-orange" />
         </div>
 
         {/* Nav Links */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-8">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -36,24 +37,17 @@ export function FloatingNav() {
                 to={item.path}
                 className="relative"
               >
-                <motion.div
+                <motion.span
                   className={cn(
-                    "px-4 py-2 text-sm font-medium transition-colors rounded-full",
+                    "text-sm font-medium transition-colors",
                     isActive
-                      ? "text-white"
-                      : "text-white/60 hover:text-white/90"
+                      ? "text-charcoal"
+                      : "text-charcoal/60 hover:text-charcoal"
                   )}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeNavPill"
-                      className="absolute inset-0 bg-white/10 rounded-full"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-10">{item.label}</span>
-                </motion.div>
+                  {item.label}
+                </motion.span>
               </NavLink>
             );
           })}
@@ -63,9 +57,9 @@ export function FloatingNav() {
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="ml-2 px-5 py-2 bg-cream text-charcoal text-sm font-semibold rounded-full hover:bg-cream/90 transition-colors"
+          className="px-6 py-2.5 bg-transparent text-charcoal text-sm font-medium rounded-full border-2 border-charcoal hover:bg-charcoal hover:text-cream transition-colors"
         >
-          Get Started
+          Join Us
         </motion.button>
       </div>
     </motion.nav>
