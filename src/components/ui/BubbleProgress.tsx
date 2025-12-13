@@ -70,10 +70,10 @@ export function BubbleProgress({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         {showValue && (
-          <span className="text-2xl font-bold">{Math.round(value)}%</span>
+          <span className="text-2xl font-bold text-white">{Math.round(value)}%</span>
         )}
         {label && (
-          <span className="text-xs text-muted-foreground">{label}</span>
+          <span className="text-xs text-white/60">{label}</span>
         )}
       </div>
     </div>
@@ -107,11 +107,11 @@ export function LinearBubbleProgress({
     <div className="w-full">
       {(label || showValue) && (
         <div className="flex justify-between items-center mb-2">
-          {label && <span className="text-sm text-muted-foreground">{label}</span>}
-          {showValue && <span className="text-sm font-medium">{value}%</span>}
+          {label && <span className="text-sm text-white/60">{label}</span>}
+          {showValue && <span className="text-sm font-medium text-white">{value}%</span>}
         </div>
       )}
-      <div className="h-3 bg-secondary rounded-full overflow-hidden">
+      <div className="h-3 bg-white/10 rounded-full overflow-hidden">
         <motion.div
           className={`h-full rounded-full ${gradientClasses[color]}`}
           initial={{ width: 0 }}

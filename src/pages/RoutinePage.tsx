@@ -5,21 +5,22 @@ import { BubbleCard } from "@/components/ui/BubbleCard";
 import { cn } from "@/lib/utils";
 
 const scheduleBlocks = [
-  { id: 1, title: "Morning Study", time: "08:00 - 10:00", type: "study", color: "lime" },
-  { id: 2, title: "React Development", time: "10:30 - 12:30", type: "coding", color: "teal" },
+  { id: 1, title: "Morning Study", time: "08:00 - 10:00", type: "study", color: "orange" },
+  { id: 2, title: "React Development", time: "10:30 - 12:30", type: "coding", color: "aqua" },
   { id: 3, title: "Lunch Break", time: "12:30 - 13:30", type: "break", color: "yellow" },
-  { id: 4, title: "Algorithm Practice", time: "14:00 - 16:00", type: "coding", color: "teal" },
-  { id: 5, title: "Physics Review", time: "16:30 - 18:00", type: "study", color: "coral" },
-  { id: 6, title: "Personal Project", time: "19:00 - 21:00", type: "coding", color: "lime" },
+  { id: 4, title: "Algorithm Practice", time: "14:00 - 16:00", type: "coding", color: "aqua" },
+  { id: 5, title: "Physics Review", time: "16:30 - 18:00", type: "study", color: "purple" },
+  { id: 6, title: "Personal Project", time: "19:00 - 21:00", type: "coding", color: "neon" },
 ];
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const colorClasses = {
-  lime: { bg: "bg-neon-lime/20", border: "border-neon-lime", text: "text-neon-lime", pill: "bg-neon-lime text-charcoal" },
-  teal: { bg: "bg-teal/20", border: "border-teal", text: "text-teal", pill: "bg-teal text-charcoal" },
-  coral: { bg: "bg-coral/20", border: "border-coral", text: "text-coral", pill: "bg-coral text-charcoal" },
-  yellow: { bg: "bg-yellow/20", border: "border-yellow", text: "text-yellow", pill: "bg-yellow text-charcoal" },
+  orange: { bg: "bg-orange/20", border: "border-l-orange", text: "text-orange", pill: "bg-orange text-white" },
+  aqua: { bg: "bg-aqua/20", border: "border-l-aqua", text: "text-aqua", pill: "bg-aqua text-charcoal" },
+  purple: { bg: "bg-purple/20", border: "border-l-purple", text: "text-purple", pill: "bg-purple text-white" },
+  yellow: { bg: "bg-yellow/20", border: "border-l-yellow", text: "text-yellow", pill: "bg-yellow text-charcoal" },
+  neon: { bg: "bg-neon-green/20", border: "border-l-neon-green", text: "text-neon-green", pill: "bg-neon-green text-charcoal" },
 };
 
 export default function RoutinePage() {
@@ -41,7 +42,7 @@ export default function RoutinePage() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="flex items-center gap-2 pill bg-neon-lime text-charcoal font-semibold shadow-glow-lime"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-orange text-white font-semibold shadow-glow-orange"
         >
           <Plus className="w-5 h-5" />
           <span className="hidden sm:inline">Add Block</span>
@@ -56,7 +57,7 @@ export default function RoutinePage() {
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6"
       >
         {/* View Switcher */}
-        <div className="flex items-center gap-1 p-1 rounded-full bg-card shadow-soft">
+        <div className="flex items-center gap-1 p-1 rounded-full bg-charcoal">
           {["day", "week"].map((v) => (
             <button
               key={v}
@@ -64,8 +65,8 @@ export default function RoutinePage() {
               className={cn(
                 "px-5 py-2 rounded-full text-sm font-medium transition-all capitalize",
                 view === v
-                  ? "bg-neon-lime text-charcoal shadow-glow-lime"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-orange text-white"
+                  : "text-white/60 hover:text-white"
               )}
             >
               {v}
@@ -75,11 +76,11 @@ export default function RoutinePage() {
 
         {/* Navigation */}
         <div className="flex items-center gap-3">
-          <button className="p-2 rounded-full bg-card shadow-soft hover:shadow-floating transition-all">
+          <button className="p-2 rounded-full bg-charcoal text-white hover:bg-charcoal/80 transition-all">
             <ChevronLeft className="w-5 h-5" />
           </button>
           <span className="px-4 font-medium">December 2024</span>
-          <button className="p-2 rounded-full bg-card shadow-soft hover:shadow-floating transition-all">
+          <button className="p-2 rounded-full bg-charcoal text-white hover:bg-charcoal/80 transition-all">
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
@@ -101,8 +102,8 @@ export default function RoutinePage() {
             className={cn(
               "flex flex-col items-center min-w-[70px] p-3 rounded-2xl transition-all",
               selectedDay === index
-                ? "bg-neon-lime text-charcoal shadow-glow-lime"
-                : "bg-card shadow-soft hover:shadow-floating"
+                ? "bg-orange text-white shadow-glow-orange"
+                : "bg-charcoal text-white hover:bg-charcoal/80"
             )}
           >
             <span className="text-xs font-medium opacity-70">{day}</span>
@@ -112,23 +113,20 @@ export default function RoutinePage() {
       </motion.div>
 
       {/* AI Suggestion */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="flex items-center gap-4 p-4 rounded-[2rem] bg-teal/10 border border-teal/30 mb-6"
-      >
-        <div className="p-3 rounded-2xl bg-teal shadow-glow-teal">
-          <Sparkles className="w-5 h-5 text-charcoal" />
+      <BubbleCard delay={0.3} className="p-4 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-2xl bg-aqua">
+            <Sparkles className="w-5 h-5 text-charcoal" />
+          </div>
+          <div className="flex-1">
+            <p className="font-medium text-white mb-0.5">AI Suggestion</p>
+            <p className="text-sm text-white/60">
+              Your focus peaks at 9-11 AM. Consider scheduling deep work tasks during this time.
+            </p>
+          </div>
+          <button className="px-4 py-2 rounded-full bg-aqua text-charcoal font-medium text-sm">Apply</button>
         </div>
-        <div className="flex-1">
-          <p className="font-medium mb-0.5">AI Suggestion</p>
-          <p className="text-sm text-muted-foreground">
-            Your focus peaks at 9-11 AM. Consider scheduling deep work tasks during this time.
-          </p>
-        </div>
-        <button className="pill-sm bg-teal text-charcoal font-medium">Apply</button>
-      </motion.div>
+      </BubbleCard>
 
       {/* Schedule Blocks */}
       <div className="space-y-3">
@@ -142,20 +140,19 @@ export default function RoutinePage() {
               transition={{ delay: 0.4 + index * 0.05 }}
               whileHover={{ scale: 1.01 }}
               className={cn(
-                "flex items-center gap-4 p-4 rounded-[1.5rem] border-l-4 bg-card shadow-soft cursor-grab hover:shadow-floating transition-all",
-                colors.border,
-                colors.bg
+                "flex items-center gap-4 p-4 rounded-2xl border-l-4 bg-charcoal cursor-grab hover:shadow-floating transition-all",
+                colors.border
               )}
             >
-              <GripVertical className="w-5 h-5 text-muted-foreground/50" />
+              <GripVertical className="w-5 h-5 text-white/30" />
               <div className="flex-1">
-                <h3 className="font-semibold mb-0.5">{block.title}</h3>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <h3 className="font-semibold text-white mb-0.5">{block.title}</h3>
+                <div className="flex items-center gap-2 text-sm text-white/50">
                   <Clock className="w-4 h-4" />
                   <span>{block.time}</span>
                 </div>
               </div>
-              <span className={cn("pill-sm font-medium text-xs capitalize", colors.pill)}>
+              <span className={cn("px-3 py-1 rounded-full font-medium text-xs capitalize", colors.pill)}>
                 {block.type}
               </span>
             </motion.div>
@@ -166,13 +163,13 @@ export default function RoutinePage() {
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-4 mt-8">
         {[
-          { label: "Total Hours", value: "8.5h", color: "lime" },
-          { label: "Study Time", value: "4h", color: "coral" },
-          { label: "Coding Time", value: "4.5h", color: "teal" },
+          { label: "Total Hours", value: "8.5h", color: "orange" },
+          { label: "Study Time", value: "4h", color: "purple" },
+          { label: "Coding Time", value: "4.5h", color: "aqua" },
         ].map((stat, index) => (
           <BubbleCard key={stat.label} delay={0.7 + index * 0.1} className="text-center p-4">
-            <p className="text-2xl font-bold mb-1">{stat.value}</p>
-            <p className="text-xs text-muted-foreground">{stat.label}</p>
+            <p className="text-2xl font-bold text-white mb-1">{stat.value}</p>
+            <p className="text-xs text-white/50">{stat.label}</p>
           </BubbleCard>
         ))}
       </div>

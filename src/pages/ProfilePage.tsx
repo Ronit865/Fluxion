@@ -57,25 +57,25 @@ export default function ProfilePage() {
       </motion.div>
 
       {/* Profile Card */}
-      <BubbleCard delay={0.1} className="mb-6">
+      <BubbleCard delay={0.1} className="mb-6 p-5">
         <div className="flex items-center gap-4">
           <div className="relative">
-            <div className="w-20 h-20 rounded-[1.5rem] gradient-orange flex items-center justify-center text-3xl font-bold text-white glow-orange">
+            <div className="w-20 h-20 rounded-2xl gradient-orange flex items-center justify-center text-3xl font-bold text-white">
               A
             </div>
-            <button className="absolute -bottom-1 -right-1 p-2 rounded-full bg-card shadow-soft border border-border hover:shadow-floating transition-all">
-              <Camera className="w-4 h-4" />
+            <button className="absolute -bottom-1 -right-1 p-2 rounded-full bg-charcoal border border-white/10 hover:bg-white/10 transition-all">
+              <Camera className="w-4 h-4 text-white" />
             </button>
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold">Alex Johnson</h2>
-            <p className="text-muted-foreground mb-2">Computer Science Student</p>
+            <h2 className="text-xl font-bold text-white">Alex Johnson</h2>
+            <p className="text-white/60 mb-2">Computer Science Student</p>
             <div className="flex items-center gap-3">
-              <span className="pill-sm bg-orange/10 text-orange text-xs flex items-center gap-1 font-medium">
+              <span className="px-3 py-1 rounded-full bg-orange/20 text-orange text-xs flex items-center gap-1 font-medium">
                 <BookOpen className="w-3 h-3" />
                 3rd Year
               </span>
-              <span className="pill-sm bg-blue/10 text-blue text-xs flex items-center gap-1 font-medium">
+              <span className="px-3 py-1 rounded-full bg-blue/20 text-blue text-xs flex items-center gap-1 font-medium">
                 <Code2 className="w-3 h-3" />
                 Full-Stack
               </span>
@@ -92,43 +92,41 @@ export default function ProfilePage() {
         className="grid grid-cols-3 gap-3 mb-6"
       >
         {achievements.map((achievement) => {
-          const widgetClasses = {
-            orange: "widget-orange",
-            purple: "widget-purple",
-            blue: "widget-blue",
-          };
-          const textClasses = {
-            orange: "text-white",
-            purple: "text-white",
-            blue: "text-white",
+          const colorClasses = {
+            orange: "bg-orange/20 text-orange",
+            purple: "bg-purple/20 text-purple",
+            blue: "bg-blue/20 text-blue",
           };
           return (
             <div
               key={achievement.title}
-              className={cn("rounded-[1.5rem] p-4 text-center hover-float", widgetClasses[achievement.color as keyof typeof widgetClasses])}
+              className="rounded-2xl p-4 text-center bg-charcoal hover:shadow-floating transition-all"
             >
-              <div className="w-10 h-10 rounded-xl mx-auto mb-2 flex items-center justify-center bg-white/20">
-                <achievement.icon className={cn("w-5 h-5", textClasses[achievement.color as keyof typeof textClasses])} />
+              <div className={cn(
+                "w-10 h-10 rounded-xl mx-auto mb-2 flex items-center justify-center",
+                colorClasses[achievement.color as keyof typeof colorClasses]
+              )}>
+                <achievement.icon className="w-5 h-5" />
               </div>
-              <p className={cn("text-sm font-medium", textClasses[achievement.color as keyof typeof textClasses])}>{achievement.title}</p>
-              <p className={cn("text-xs opacity-80", textClasses[achievement.color as keyof typeof textClasses])}>{achievement.desc}</p>
+              <p className="text-sm font-medium text-white">{achievement.title}</p>
+              <p className="text-xs text-white/50">{achievement.desc}</p>
             </div>
           );
         })}
       </motion.div>
 
       {/* Theme Customization */}
-      <BubbleCard delay={0.25} className="mb-4">
+      <BubbleCard delay={0.25} className="mb-4 p-5">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-xl widget-purple">
-            <Palette className="w-5 h-5 text-white" />
+          <div className="p-2 rounded-xl bg-purple/20">
+            <Palette className="w-5 h-5 text-purple" />
           </div>
-          <h3 className="font-medium">Theme Customization</h3>
+          <h3 className="font-medium text-white">Theme Customization</h3>
         </div>
         
         {/* Primary Color */}
         <div className="mb-4">
-          <p className="text-sm text-muted-foreground mb-3">Primary Color</p>
+          <p className="text-sm text-white/60 mb-3">Primary Color</p>
           <div className="flex gap-2">
             {primaryColors.map((color, index) => (
               <button
@@ -138,7 +136,7 @@ export default function ProfilePage() {
                   "w-10 h-10 rounded-xl transition-all",
                   color.class,
                   selectedPrimary === index 
-                    ? "ring-2 ring-offset-2 ring-foreground scale-110" 
+                    ? "ring-2 ring-offset-2 ring-offset-charcoal ring-white scale-110" 
                     : "hover:scale-105"
                 )}
                 title={color.name}
@@ -149,7 +147,7 @@ export default function ProfilePage() {
 
         {/* Card Style */}
         <div className="mb-4">
-          <p className="text-sm text-muted-foreground mb-3">Card Style</p>
+          <p className="text-sm text-white/60 mb-3">Card Style</p>
           <div className="flex gap-2">
             {cardStyles.map((style, index) => (
               <button
@@ -158,8 +156,8 @@ export default function ProfilePage() {
                 className={cn(
                   "px-4 py-2 rounded-xl text-sm font-medium transition-all",
                   selectedCardStyle === index
-                    ? "widget-orange text-white"
-                    : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                    ? "bg-orange text-white"
+                    : "bg-white/10 text-white/60 hover:bg-white/20"
                 )}
               >
                 {style.name}
@@ -169,7 +167,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Dark/Light Mode */}
-        <div className="flex items-center justify-between pt-2 border-t border-border">
+        <div className="flex items-center justify-between pt-4 border-t border-white/10">
           <div className="flex items-center gap-3">
             {isDark ? (
               <Moon className="w-5 h-5 text-purple" />
@@ -177,18 +175,18 @@ export default function ProfilePage() {
               <Sun className="w-5 h-5 text-yellow" />
             )}
             <div>
-              <p className="font-medium text-sm">{isDark ? "Dark" : "Light"} Mode</p>
+              <p className="font-medium text-sm text-white">{isDark ? "Dark" : "Light"} Mode</p>
             </div>
           </div>
           <button
             onClick={toggleTheme}
             className={cn(
               "w-14 h-8 rounded-full p-1 transition-all",
-              isDark ? "widget-purple" : "bg-secondary"
+              isDark ? "bg-purple" : "bg-white/20"
             )}
           >
             <motion.div
-              className="w-6 h-6 rounded-full bg-card shadow-sm"
+              className="w-6 h-6 rounded-full bg-white shadow-sm"
               animate={{ x: isDark ? 24 : 0 }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             />
@@ -197,12 +195,12 @@ export default function ProfilePage() {
       </BubbleCard>
 
       {/* Notifications */}
-      <BubbleCard delay={0.4} className="mb-4">
+      <BubbleCard delay={0.4} className="mb-4 p-5">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-xl widget-blue">
-            <Bell className="w-5 h-5 text-white" />
+          <div className="p-2 rounded-xl bg-blue/20">
+            <Bell className="w-5 h-5 text-blue" />
           </div>
-          <h3 className="font-medium">Notifications</h3>
+          <h3 className="font-medium text-white">Notifications</h3>
         </div>
         <div className="space-y-3">
           {[
@@ -211,7 +209,7 @@ export default function ProfilePage() {
             { key: "weekly", label: "Weekly reports" },
           ].map((item) => (
             <div key={item.key} className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{item.label}</span>
+              <span className="text-sm text-white/60">{item.label}</span>
               <button
                 onClick={() =>
                   setNotifications({
@@ -222,12 +220,12 @@ export default function ProfilePage() {
                 className={cn(
                   "w-11 h-6 rounded-full p-0.5 transition-all",
                   notifications[item.key as keyof typeof notifications]
-                    ? "widget-orange"
-                    : "bg-secondary"
+                    ? "bg-orange"
+                    : "bg-white/20"
                 )}
               >
                 <motion.div
-                  className="w-5 h-5 rounded-full bg-card shadow-sm"
+                  className="w-5 h-5 rounded-full bg-white shadow-sm"
                   animate={{ x: notifications[item.key as keyof typeof notifications] ? 20 : 0 }}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 />
@@ -238,13 +236,13 @@ export default function ProfilePage() {
       </BubbleCard>
 
       {/* Subjects */}
-      <BubbleCard delay={0.5} className="mb-4">
+      <BubbleCard delay={0.5} className="mb-4 p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl widget-aqua">
-              <BookOpen className="w-5 h-5 text-charcoal" />
+            <div className="p-2 rounded-xl bg-aqua/20">
+              <BookOpen className="w-5 h-5 text-aqua" />
             </div>
-            <h3 className="font-medium">Study Subjects</h3>
+            <h3 className="font-medium text-white">Study Subjects</h3>
           </div>
           <button className="text-sm text-orange hover:underline font-medium">Edit</button>
         </div>
@@ -253,8 +251,8 @@ export default function ProfilePage() {
             <span
               key={subject}
               className={cn(
-                "pill-sm text-sm font-medium",
-                index < 3 ? "bg-orange/10 text-orange" : "bg-secondary text-muted-foreground"
+                "px-3 py-1.5 rounded-full text-sm font-medium",
+                index < 3 ? "bg-orange/20 text-orange" : "bg-white/10 text-white/60"
               )}
             >
               {subject}
@@ -264,13 +262,13 @@ export default function ProfilePage() {
       </BubbleCard>
 
       {/* Coding Focus */}
-      <BubbleCard delay={0.6} className="mb-4">
+      <BubbleCard delay={0.6} className="mb-4 p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl widget-neon">
-              <Code2 className="w-5 h-5 text-charcoal" />
+            <div className="p-2 rounded-xl bg-neon-green/20">
+              <Code2 className="w-5 h-5 text-neon-green" />
             </div>
-            <h3 className="font-medium">Coding Focus</h3>
+            <h3 className="font-medium text-white">Coding Focus</h3>
           </div>
           <button className="text-sm text-orange hover:underline font-medium">Edit</button>
         </div>
@@ -279,8 +277,8 @@ export default function ProfilePage() {
             <span
               key={focus}
               className={cn(
-                "pill-sm text-sm font-medium",
-                index < 2 ? "bg-blue/10 text-blue" : "bg-secondary text-muted-foreground"
+                "px-3 py-1.5 rounded-full text-sm font-medium",
+                index < 2 ? "bg-blue/20 text-blue" : "bg-white/10 text-white/60"
               )}
             >
               {focus}
@@ -290,13 +288,13 @@ export default function ProfilePage() {
       </BubbleCard>
 
       {/* Weekly Goals */}
-      <BubbleCard delay={0.7}>
+      <BubbleCard delay={0.7} className="p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl widget-yellow">
-              <Target className="w-5 h-5 text-charcoal" />
+            <div className="p-2 rounded-xl bg-yellow/20">
+              <Target className="w-5 h-5 text-yellow" />
             </div>
-            <h3 className="font-medium">Weekly Goals</h3>
+            <h3 className="font-medium text-white">Weekly Goals</h3>
           </div>
         </div>
         <div className="space-y-4">
