@@ -45,7 +45,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="p-4 lg:p-8 max-w-3xl mx-auto">
+    <div className="p-4 lg:p-8 w-full max-w-none">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

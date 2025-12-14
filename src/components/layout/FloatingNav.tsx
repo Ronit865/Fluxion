@@ -20,7 +20,7 @@ export function FloatingNav() {
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className="fixed top-0 left-0 right-0 z-50 px-8 py-4"
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="w-full flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-1">
           <span className="text-charcoal font-bold text-xl">routine</span>

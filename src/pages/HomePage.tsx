@@ -25,7 +25,7 @@ export default function HomePage() {
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   return (
-    <div className="px-4 lg:px-6 max-w-7xl mx-auto h-full">
+    <div className="px-4 lg:px-8 w-full max-w-none h-full">
       {/* Header - Compact */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

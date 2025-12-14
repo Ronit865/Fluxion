@@ -28,7 +28,7 @@ export default function RoutinePage() {
   const [view, setView] = useState<"day" | "week">("day");
 
   return (
-    <div className="p-4 lg:p-8 max-w-6xl mx-auto">
+    <div className="p-4 lg:p-8 w-full max-w-none">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
