@@ -20,6 +20,8 @@ import {
 import { TrendingUp, Target, Award, Brain, Flame, Calendar } from "lucide-react";
 import { BubbleCard, StatBubble } from "@/components/ui/BubbleCard";
 import { BubbleProgress } from "@/components/ui/BubbleProgress";
+import { useFitToScreen } from "@/components/layout/BubbleLayout";
+import { cn } from "@/lib/utils";
 
 const weeklyData = [
   { name: "Mon", study: 4, coding: 3 },
@@ -47,8 +49,18 @@ const skillsData = [
 ];
 
 export default function AnalyticsPage() {
+  const context = useFitToScreen();
+  const fitToScreen = context?.fitToScreen ?? false;
+
   return (
-    <div className="p-4 lg:p-8 w-full max-w-none">
+    <div
+      className={cn(
+        "p-4 lg:p-8 w-full max-w-none",
+        fitToScreen
+          ? "lg:h-full lg:flex lg:flex-col lg:overflow-hidden"
+          : ""
+      )}
+    >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -60,7 +72,7 @@ export default function AnalyticsPage() {
       </motion.div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className={cn("grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6", fitToScreen && "lg:shrink-0")}>
         <StatBubble icon={TrendingUp} label="Total Hours" value="127h" subtext="+12%" color="orange" delay={0} />
         <StatBubble icon={Target} label="Goals Met" value="8/10" subtext="+2" color="blue" delay={0.1} />
         <StatBubble icon={Award} label="Best Streak" value="12 days" subtext="New!" color="purple" delay={0.2} />
@@ -68,7 +80,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Charts Grid */}
-      <div className="grid lg:grid-cols-2 gap-6 mb-6">
+      <div className={cn("grid lg:grid-cols-2 gap-6 mb-6", fitToScreen && "lg:flex-1 lg:min-h-0 lg:overflow-auto")}>
         {/* Weekly Activity */}
         <BubbleCard delay={0.2} className="p-5">
           <h3 className="font-semibold text-lg mb-4 text-white">Weekly Activity</h3>
@@ -181,8 +193,8 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Activity Heatmap */}
-      <BubbleCard delay={0.6} className="p-5">
-        <div className="flex items-center justify-between mb-4">
+      <BubbleCard delay={0.6} className={cn("p-5", fitToScreen && "lg:shrink-0")}>
+        <div className={cn("flex items-center justify-between mb-4", fitToScreen && "lg:mb-2")}>
           <h3 className="font-semibold text-lg text-white">Activity Heatmap</h3>
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-white/50" />
@@ -224,7 +236,7 @@ export default function AnalyticsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="mt-6 p-6 rounded-3xl gradient-orange glow-orange"
+        className={cn("mt-6 p-6 rounded-3xl gradient-orange glow-orange", fitToScreen && "lg:shrink-0 lg:mt-4")}
       >
         <div className="flex items-center gap-4">
           <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">

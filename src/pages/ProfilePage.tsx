@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { User, Moon, Sun, Bell, Target, Settings, ChevronRight, Camera, Award, Flame, BookOpen, Code2, Palette, Sparkles } from "lucide-react";
 import { BubbleCard } from "@/components/ui/BubbleCard";
 import { LinearBubbleProgress } from "@/components/ui/BubbleProgress";
+import { useFitToScreen } from "@/components/layout/BubbleLayout";
 import { cn } from "@/lib/utils";
 
 const achievements = [
@@ -38,6 +39,8 @@ export default function ProfilePage() {
     breaks: true,
     weekly: false,
   });
+  const context = useFitToScreen();
+  const fitToScreen = context?.fitToScreen ?? false;
 
   const toggleTheme = () => {
     setIsDark(!isDark);
@@ -45,7 +48,14 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="p-4 lg:p-8 w-full max-w-none">
+    <div
+      className={cn(
+        "p-4 lg:p-8 w-full max-w-none",
+        fitToScreen
+          ? "lg:h-full lg:overflow-auto"
+          : ""
+      )}
+    >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
