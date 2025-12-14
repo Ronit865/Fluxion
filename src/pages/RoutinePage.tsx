@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Clock, ChevronLeft, ChevronRight, Sparkles, GripVertical } from "lucide-react";
 import { BubbleCard } from "@/components/ui/BubbleCard";
+import { useFitToScreen } from "@/components/layout/BubbleLayout";
 import { cn } from "@/lib/utils";
 
 const scheduleBlocks = [
@@ -26,9 +27,18 @@ const colorClasses = {
 export default function RoutinePage() {
   const [selectedDay, setSelectedDay] = useState(2);
   const [view, setView] = useState<"day" | "week">("day");
+  const context = useFitToScreen();
+  const fitToScreen = context?.fitToScreen ?? false;
 
   return (
-    <div className="p-4 lg:p-8 w-full max-w-none">
+    <div
+      className={cn(
+        "p-4 lg:p-8 w-full max-w-none",
+        fitToScreen
+          ? "lg:h-full lg:flex lg:flex-col lg:overflow-hidden"
+          : ""
+      )}
+    >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -129,7 +139,7 @@ export default function RoutinePage() {
       </BubbleCard>
 
       {/* Schedule Blocks */}
-      <div className="space-y-3">
+      <div className={cn("space-y-3", fitToScreen && "lg:flex-1 lg:min-h-0 lg:overflow-auto")}>
         {scheduleBlocks.map((block, index) => {
           const colors = colorClasses[block.color as keyof typeof colorClasses];
           return (
@@ -161,7 +171,7 @@ export default function RoutinePage() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-4 mt-8">
+      <div className={cn("grid grid-cols-3 gap-4 mt-8", fitToScreen && "lg:shrink-0 lg:mt-4")}>
         {[
           { label: "Total Hours", value: "8.5h", color: "orange" },
           { label: "Study Time", value: "4h", color: "purple" },

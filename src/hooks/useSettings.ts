@@ -14,6 +14,7 @@ export interface AppSettings {
   theme: 'light' | 'dark' | 'system';
   notifications: boolean;
   soundEnabled: boolean;
+  fitToScreen: boolean; // Desktop no-scroll layout mode
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -32,6 +33,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   theme: 'light',
   notifications: true,
   soundEnabled: true,
+  fitToScreen: false,
 };
 
 export function useSettings() {
@@ -87,6 +89,10 @@ export function useSettings() {
     setSettings((prev) => ({ ...prev, soundEnabled: !prev.soundEnabled }));
   };
 
+  const toggleFitToScreen = () => {
+    setSettings((prev) => ({ ...prev, fitToScreen: !prev.fitToScreen }));
+  };
+
   const resetSettings = () => {
     setSettings(DEFAULT_SETTINGS);
   };
@@ -100,6 +106,7 @@ export function useSettings() {
     updateCategoryLabel,
     toggleNotifications,
     toggleSound,
+    toggleFitToScreen,
     resetSettings,
   };
 }

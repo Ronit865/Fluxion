@@ -3,6 +3,8 @@ import { Zap, Clock, Target, Sparkles, ChevronRight, Sun, Moon } from "lucide-re
 import { BubbleCard, StatBubble } from "@/components/ui/BubbleCard";
 import { BubbleProgress, LinearBubbleProgress } from "@/components/ui/BubbleProgress";
 import { BubbleAreaChart } from "@/components/ui/BubbleChart";
+import { useFitToScreen } from "@/components/layout/BubbleLayout";
+import { cn } from "@/lib/utils";
 
 const chartData = [
   { name: "Mon", value: 4, value2: 3 },
@@ -21,11 +23,20 @@ const tasks = [
 ];
 
 export default function HomePage() {
+  const context = useFitToScreen();
+  const fitToScreen = context?.fitToScreen ?? false;
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   return (
-    <div className="px-4 lg:px-8 w-full max-w-none h-full">
+    <div
+      className={cn(
+        "px-4 lg:px-8 w-full max-w-none",
+        fitToScreen
+          ? "lg:h-full lg:flex lg:flex-col lg:overflow-hidden"
+          : "h-full"
+      )}
+    >
       {/* Header - Compact */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -64,7 +75,7 @@ export default function HomePage() {
       </motion.div>
 
       {/* Stats Grid - Compact */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+      <div className={cn("grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4", fitToScreen && "lg:shrink-0")}>
         <StatBubble
           icon={Clock}
           label="Study Hours"
@@ -100,9 +111,9 @@ export default function HomePage() {
       </div>
 
       {/* Main Content Grid - Adjusted for single screen */}
-      <div className="grid lg:grid-cols-3 gap-4 mb-4">
+      <div className={cn("grid lg:grid-cols-3 gap-4 mb-4", fitToScreen && "lg:flex-1 lg:min-h-0")}>
         {/* Weekly Activity */}
-        <BubbleCard className="lg:col-span-2 p-4" delay={0.3}>
+        <BubbleCard className={cn("lg:col-span-2 p-4", fitToScreen && "lg:overflow-auto")} delay={0.3}>
           <div className="flex items-center justify-between mb-3">
             <div>
               <h3 className="font-semibold text-white">Weekly Activity</h3>
@@ -125,7 +136,7 @@ export default function HomePage() {
         </BubbleCard>
 
         {/* Focus Score */}
-        <BubbleCard delay={0.4} className="p-4">
+        <BubbleCard delay={0.4} className={cn("p-4", fitToScreen && "lg:overflow-auto")}>
           <div className="text-center">
             <h3 className="font-semibold text-white mb-1">Focus Score</h3>
             <p className="text-xs text-white/60 mb-3">Today's performance</p>
@@ -140,9 +151,9 @@ export default function HomePage() {
       </div>
 
       {/* Tasks & Progress - Compact */}
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className={cn("grid lg:grid-cols-2 gap-4", fitToScreen && "lg:flex-1 lg:min-h-0")}>
         {/* Today's Tasks */}
-        <BubbleCard delay={0.5} className="p-4">
+        <BubbleCard delay={0.5} className={cn("p-4", fitToScreen && "lg:overflow-auto")}>
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-white">Today's Tasks</h3>
             <span className="px-2 py-1 bg-orange/20 text-orange text-xs font-medium rounded-full">2/3 done</span>
@@ -197,7 +208,7 @@ export default function HomePage() {
         </BubbleCard>
 
         {/* Weekly Progress */}
-        <BubbleCard delay={0.6} className="p-4">
+        <BubbleCard delay={0.6} className={cn("p-4", fitToScreen && "lg:overflow-auto")}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-white">Weekly Progress</h3>
             <button className="flex items-center gap-1 text-xs text-orange hover:underline">

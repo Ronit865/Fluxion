@@ -3,6 +3,7 @@ import { ProfileSettings } from '@/components/settings/ProfileSettings';
 import { CategorySettings } from '@/components/settings/CategorySettings';
 import { FocusGoalSettings } from '@/components/settings/FocusGoalSettings';
 import { ThemeSettings } from '@/components/settings/ThemeSettings';
+import { LayoutSettings } from '@/components/settings/LayoutSettings';
 import { useSettings } from '@/hooks/useSettings';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
@@ -18,6 +19,7 @@ export default function Settings() {
     updateCategoryLabel,
     toggleNotifications,
     toggleSound,
+    toggleFitToScreen,
     resetSettings,
   } = useSettings();
 
@@ -57,6 +59,10 @@ export default function Settings() {
             onThemeChange={updateTheme}
             onNotificationsToggle={toggleNotifications}
             onSoundToggle={toggleSound}
+          />
+          <LayoutSettings
+            fitToScreen={settings.fitToScreen}
+            onFitToScreenToggle={toggleFitToScreen}
           />
           <CategorySettings
             categories={settings.customCategories}
