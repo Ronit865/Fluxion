@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { RoutineBlock } from '@/types/routine';
-import { Clock, Calendar, Coffee } from 'lucide-react';
+import { Clock, Calendar, Coffee, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Progress } from '@/components/ui/progress';
 
 interface DaySummaryCardProps {
   blocks: RoutineBlock[];
@@ -34,61 +33,90 @@ export function DaySummaryCard({
     };
   }, [blocks, wakeHour, sleepHour]);
 
+  // Calculate ring parameters
+  const ringSize = 80;
+  const strokeWidth = 8;
+  const radius = (ringSize - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (stats.utilizationPercent / 100) * circumference;
+
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-3">
         <div className="p-2 rounded-xl bg-soft-blue/50">
-          <Calendar className="w-5 h-5 text-soft-blue-foreground" />
+          <Calendar className="w-4 h-4 text-soft-blue-foreground" />
         </div>
-        <h3 className="font-semibold text-foreground">Day Summary</h3>
+        <h3 className="font-semibold text-foreground text-sm">Day Summary</h3>
       </div>
 
-      {/* Stats */}
-      <div className="flex-1 space-y-3">
-        {/* Available Time */}
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Available</span>
-          <span className="font-semibold text-foreground">{stats.totalAvailableHours}h</span>
+      {/* Compact layout with ring */}
+      <div className="flex-1 flex items-center gap-4">
+        {/* Progress Ring */}
+        <div className="relative flex-shrink-0">
+          <svg width={ringSize} height={ringSize} className="transform -rotate-90">
+            {/* Background circle */}
+            <circle
+              cx={ringSize / 2}
+              cy={ringSize / 2}
+              r={radius}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={strokeWidth}
+              className="text-muted/20"
+            />
+            {/* Progress circle */}
+            <circle
+              cx={ringSize / 2}
+              cy={ringSize / 2}
+              r={radius}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={strokeWidth}
+              strokeDasharray={circumference}
+              strokeDashoffset={offset}
+              strokeLinecap="round"
+              className={cn(
+                "transition-all duration-500",
+                stats.utilizationPercent > 80 ? "text-orange" : 
+                stats.utilizationPercent > 50 ? "text-aqua" : "text-soft-green-foreground"
+              )}
+            />
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-lg font-bold text-foreground">{stats.utilizationPercent}%</span>
+          </div>
         </div>
 
-        {/* Scheduled */}
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5" />
-            Scheduled
-          </span>
-          <span className="font-semibold text-foreground">{stats.scheduledHours}h</span>
-        </div>
-
-        {/* Breaks */}
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground flex items-center gap-1.5">
-            <Coffee className="w-3.5 h-3.5" />
-            Breaks
-          </span>
-          <span className="font-semibold text-foreground">{stats.breakHours}h</span>
-        </div>
-
-        {/* Free Time */}
-        <div className="pt-2 border-t border-border/50">
-          <div className="flex items-center justify-between text-sm mb-2">
-            <span className="text-muted-foreground">Free time</span>
+        {/* Compact Stats */}
+        <div className="flex-1 space-y-1.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground flex items-center gap-1">
+              <Target className="w-3 h-3" />
+              Scheduled
+            </span>
+            <span className="font-semibold text-foreground">{stats.scheduledHours}h</span>
+          </div>
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground flex items-center gap-1">
+              <Coffee className="w-3 h-3" />
+              Breaks
+            </span>
+            <span className="font-semibold text-foreground">{stats.breakHours}h</span>
+          </div>
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              Free
+            </span>
             <span className={cn(
               "font-semibold",
               stats.freeHours > 2 ? "text-soft-green-foreground" : 
               stats.freeHours > 0 ? "text-soft-yellow-foreground" : "text-destructive"
             )}>
-              {stats.freeHours}h remaining
+              {stats.freeHours}h
             </span>
           </div>
-          <Progress 
-            value={stats.utilizationPercent} 
-            className="h-2"
-          />
-          <p className="text-xs text-muted-foreground mt-1">
-            {stats.utilizationPercent}% of day planned
-          </p>
         </div>
       </div>
     </div>

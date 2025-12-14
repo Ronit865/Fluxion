@@ -36,76 +36,112 @@ export function AIGuidanceCard({
     // Calculate metrics
     const totalScheduledHours = blocks.reduce((acc, b) => acc + b.duration, 0);
     const availableHours = 22 - Math.max(6, currentHour);
+    const remainingFreeHours = Math.max(0, availableHours - totalScheduledHours);
     const pendingTasks = tasks.filter(t => !t.completed && t.deadline);
     const overdueTasks = pendingTasks.filter(t => new Date(t.deadline!) < now);
-    
-    // Check for overdue tasks
+    const urgentTasks = pendingTasks.filter(t => {
+      const deadline = new Date(t.deadline!);
+      const hoursUntilDue = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
+      return hoursUntilDue > 0 && hoursUntilDue <= 24;
+    });
+
+    // Priority 1: Overdue tasks (highest priority)
     if (overdueTasks.length > 0) {
       result.push({
         id: 'overdue-tasks',
         type: 'warning',
         icon: AlertTriangle,
-        message: `You have ${overdueTasks.length} overdue task${overdueTasks.length > 1 ? 's' : ''}. Consider rescheduling or completing them today.`,
+        message: `${overdueTasks.length} overdue task${overdueTasks.length > 1 ? 's' : ''} need immediate attention. You have ${remainingFreeHours}h free to work on them.`,
         action: 'View Tasks',
       });
     }
 
-    // Check for overscheduling
+    // Priority 2: Urgent tasks due today
+    if (urgentTasks.length > 0 && overdueTasks.length === 0) {
+      result.push({
+        id: 'urgent-tasks',
+        type: 'warning',
+        icon: AlertTriangle,
+        message: `${urgentTasks.length} task${urgentTasks.length > 1 ? 's' : ''} due in the next 24h. Consider scheduling them in your ${remainingFreeHours}h of free time.`,
+        action: 'Schedule Now',
+      });
+    }
+
+    // Priority 3: Overscheduling
     if (totalScheduledHours > availableHours) {
       result.push({
         id: 'overscheduled',
         type: 'warning',
         icon: AlertTriangle,
-        message: `You've scheduled ${totalScheduledHours}h but only have ${availableHours}h left today. Consider postponing lower-priority items.`,
+        message: `Scheduled ${totalScheduledHours}h but only ${availableHours}h remain today. Consider moving ${totalScheduledHours - availableHours}h to tomorrow.`,
         action: 'Optimize',
       });
     }
 
-    // Check for no breaks
+    // Context-aware tips based on time of day and schedule
     const hasBreaks = blocks.some(b => b.category === 'break');
-    if (blocks.length > 3 && !hasBreaks) {
+    const morningBlocks = blocks.filter(b => b.startHour >= 6 && b.startHour < 12);
+    const afternoonBlocks = blocks.filter(b => b.startHour >= 12 && b.startHour < 17);
+
+    // Morning suggestions (before noon)
+    if (currentHour < 12) {
+      if (morningBlocks.length === 0 && remainingFreeHours >= 2) {
+        result.push({
+          id: 'morning-slot',
+          type: 'tip',
+          icon: Target,
+          message: 'Peak focus time! Your morning is free. Schedule your most challenging task now.',
+          action: 'Add Task',
+        });
+      }
+    }
+
+    // Afternoon suggestions
+    if (currentHour >= 12 && currentHour < 17) {
+      if (afternoonBlocks.length === 0 && remainingFreeHours >= 2) {
+        result.push({
+          id: 'afternoon-slot',
+          type: 'tip',
+          icon: Lightbulb,
+          message: `${remainingFreeHours}h free this afternoon. Good time for collaborative work or meetings.`,
+          action: 'Schedule',
+        });
+      }
+    }
+
+    // Break reminder
+    if (blocks.length >= 3 && !hasBreaks && totalScheduledHours > 4) {
       result.push({
         id: 'no-breaks',
         type: 'tip',
         icon: Lightbulb,
-        message: 'Consider adding short breaks between work sessions for better focus and productivity.',
+        message: `${totalScheduledHours}h scheduled without breaks. Add 15-min breaks every 2h for sustained focus.`,
         action: 'Add Break',
       });
     }
 
-    // Check for morning availability
-    if (currentHour < 10 && blocks.filter(b => b.startHour >= 9 && b.startHour <= 11).length === 0) {
-      result.push({
-        id: 'morning-slot',
-        type: 'tip',
-        icon: Target,
-        message: 'Your morning slot (9-11 AM) is free. This is typically your peak focus time!',
-        action: 'Schedule Now',
-      });
-    }
-
-    // Empty schedule encouragement
+    // Empty schedule guidance
     if (blocks.length === 0) {
       result.push({
         id: 'empty-schedule',
         type: 'encouragement',
         icon: Zap,
-        message: 'Ready to plan your day? Start by adding your most important task first.',
+        message: `${availableHours}h available today. Start with your highest-priority task to build momentum.`,
         action: 'Get Started',
       });
     }
 
-    // Good progress
-    if (blocks.length >= 3 && totalScheduledHours <= availableHours) {
+    // Positive reinforcement
+    if (blocks.length >= 3 && totalScheduledHours <= availableHours && overdueTasks.length === 0) {
       result.push({
         id: 'good-progress',
         type: 'encouragement',
         icon: Zap,
-        message: 'Your schedule looks balanced! You have a good mix of work and available time.',
+        message: `Great balance! ${totalScheduledHours}h planned with ${remainingFreeHours}h buffer for unexpected tasks.`,
       });
     }
 
-    return result.filter(s => !dismissedIds.has(s.id));
+    return result.filter(s => !dismissedIds.has(s.id)).slice(0, 2); // Limit to 2 suggestions
   }, [blocks, tasks, dismissedIds]);
 
   const handleDismiss = (id: string) => {

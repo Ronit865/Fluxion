@@ -55,32 +55,54 @@ export function PendingTasksCard({
   if (pendingTasks.length === 0) {
     return (
       <div className="h-full flex flex-col">
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3">
           <div className="p-2 rounded-xl bg-soft-green/50">
-            <Check className="w-5 h-5 text-soft-green-foreground" />
+            <Check className="w-4 h-4 text-soft-green-foreground" />
           </div>
-          <h3 className="font-semibold text-foreground">All Caught Up!</h3>
+          <h3 className="font-semibold text-foreground text-sm">All Caught Up!</h3>
         </div>
-        <div className="flex-1 flex items-center justify-center">
-          <p className="text-sm text-muted-foreground text-center">
-            No pending or missed tasks. Great job! 🎉
-          </p>
+        <div className="flex-1 flex items-center justify-center bg-soft-green/10 rounded-xl">
+          <div className="text-center p-4">
+            <p className="text-sm text-muted-foreground mb-1">
+              No pending tasks
+            </p>
+            <p className="text-xs text-muted-foreground/70">
+              Schedule new tasks to stay productive
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
+  const overdueCount = pendingTasks.filter(t => isOverdue(t.deadline!)).length;
+
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-4">
-        <div className="p-2 rounded-xl bg-destructive/10">
-          <AlertCircle className="w-5 h-5 text-destructive" />
+      {/* Header with urgency indicator */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <div className={cn(
+            "p-2 rounded-xl",
+            overdueCount > 0 ? "bg-destructive/20 animate-pulse" : "bg-soft-yellow/50"
+          )}>
+            <AlertCircle className={cn(
+              "w-4 h-4",
+              overdueCount > 0 ? "text-destructive" : "text-soft-yellow-foreground"
+            )} />
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground text-sm">Pending Tasks</h3>
+            <p className="text-[10px] text-muted-foreground">
+              {overdueCount > 0 ? `${overdueCount} overdue` : `${pendingTasks.length} need attention`}
+            </p>
+          </div>
         </div>
-        <div>
-          <h3 className="font-semibold text-foreground">Pending Tasks</h3>
-          <p className="text-xs text-muted-foreground">{pendingTasks.length} tasks need attention</p>
-        </div>
+        {overdueCount > 0 && (
+          <span className="px-2 py-0.5 rounded-full bg-destructive/20 text-destructive text-[10px] font-medium">
+            Urgent
+          </span>
+        )}
       </div>
 
       {/* Task List */}

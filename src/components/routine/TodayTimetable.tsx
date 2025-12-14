@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 import { RoutineBlock, ROUTINE_CATEGORY_COLORS } from '@/types/routine';
 import { Button } from '@/components/ui/button';
 import { Sparkles, RefreshCw, Pencil, Clock, Check } from 'lucide-react';
@@ -19,6 +19,16 @@ interface TimeSlot {
   block?: RoutineBlock;
   task?: Task;
   isPast: boolean;
+  isCurrentHour: boolean;
+}
+
+interface GroupedSlot {
+  startHour: number;
+  endHour: number;
+  block?: RoutineBlock;
+  isPast: boolean;
+  isFreeGroup: boolean;
+  freeSlotCount: number;
 }
 
 export function TodayTimetable({
@@ -30,22 +40,80 @@ export function TodayTimetable({
   isGenerating = false,
 }: TodayTimetableProps) {
   const currentHour = new Date().getHours();
-  
-  // Generate time slots from 6 AM to 10 PM
-  const timeSlots = useMemo(() => {
-    const slots: TimeSlot[] = [];
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const currentTimeRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to current time on mount
+  useEffect(() => {
+    if (currentTimeRef.current && scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const currentTimeElement = currentTimeRef.current;
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = currentTimeElement.getBoundingClientRect();
+      
+      // Scroll to position current time indicator near the top
+      const scrollOffset = elementRect.top - containerRect.top - 60;
+      container.scrollTo({ top: container.scrollTop + scrollOffset, behavior: 'smooth' });
+    }
+  }, []);
+
+  // Group consecutive free slots together
+  const groupedSlots = useMemo(() => {
+    const slots: GroupedSlot[] = [];
+    let currentFreeGroup: { startHour: number; isPast: boolean } | null = null;
+
     for (let hour = 6; hour <= 22; hour++) {
       const block = blocks.find(b => {
         const blockEnd = b.startHour + b.duration;
         return hour >= b.startHour && hour < blockEnd;
       });
       
+      const isPast = hour < currentHour;
+      const isBlockStart = block?.startHour === hour;
+
+      if (block) {
+        // Close any open free group
+        if (currentFreeGroup) {
+          slots.push({
+            startHour: currentFreeGroup.startHour,
+            endHour: hour,
+            isPast: currentFreeGroup.isPast,
+            isFreeGroup: true,
+            freeSlotCount: hour - currentFreeGroup.startHour,
+          });
+          currentFreeGroup = null;
+        }
+        
+        // Only add block at start hour
+        if (isBlockStart) {
+          slots.push({
+            startHour: block.startHour,
+            endHour: block.startHour + block.duration,
+            block,
+            isPast,
+            isFreeGroup: false,
+            freeSlotCount: 0,
+          });
+        }
+      } else {
+        // Free slot
+        if (!currentFreeGroup) {
+          currentFreeGroup = { startHour: hour, isPast };
+        }
+      }
+    }
+
+    // Close final free group
+    if (currentFreeGroup) {
       slots.push({
-        hour,
-        block: block?.startHour === hour ? block : undefined,
-        isPast: hour < currentHour,
+        startHour: currentFreeGroup.startHour,
+        endHour: 23,
+        isPast: currentFreeGroup.isPast,
+        isFreeGroup: true,
+        freeSlotCount: 23 - currentFreeGroup.startHour,
       });
     }
+
     return slots;
   }, [blocks, currentHour]);
 
@@ -57,8 +125,17 @@ export function TodayTimetable({
   };
 
   const getBlockHeight = (duration: number) => {
-    return `${duration * 56}px`; // 56px per hour slot
+    return `${duration * 48}px`; // Slightly reduced from 56px
   };
+
+  const getFreeGroupHeight = (count: number) => {
+    // Collapse long free groups: show minimal height for groups > 2 hours
+    if (count > 2) return '40px';
+    return `${count * 32}px`; // Compact height for free slots
+  };
+
+  // Calculate current time position within the hour (0-100%)
+  const currentMinutePercent = (new Date().getMinutes() / 60) * 100;
 
   return (
     <div className="h-full flex flex-col">
@@ -98,28 +175,46 @@ export function TodayTimetable({
       </div>
 
       {/* Timetable */}
-      <div className="flex-1 overflow-y-auto pr-2 -mr-2">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto pr-2 -mr-2">
         <div className="relative">
-          {timeSlots.map((slot, index) => {
-            // Skip slots that are covered by a multi-hour block
-            const coveredByBlock = blocks.find(b => {
-              const blockEnd = b.startHour + b.duration;
-              return slot.hour > b.startHour && slot.hour < blockEnd;
-            });
+          {groupedSlots.map((slot, index) => {
+            const isCurrentTimeSlot = currentHour >= slot.startHour && currentHour < slot.endHour;
             
-            if (coveredByBlock) return null;
-
             return (
               <div
-                key={slot.hour}
+                key={`${slot.startHour}-${index}`}
+                ref={isCurrentTimeSlot ? currentTimeRef : undefined}
                 className={cn(
-                  "flex gap-3 min-h-[56px] border-b border-border/50 group",
+                  "flex gap-3 border-b border-border/30 group relative",
                   slot.isPast && "opacity-50"
                 )}
+                style={{ 
+                  minHeight: slot.isFreeGroup 
+                    ? getFreeGroupHeight(slot.freeSlotCount) 
+                    : slot.block 
+                      ? getBlockHeight(slot.block.duration)
+                      : '48px'
+                }}
               >
+                {/* Current time indicator line */}
+                {isCurrentTimeSlot && (
+                  <div 
+                    className="absolute left-0 right-0 z-10 flex items-center pointer-events-none"
+                    style={{ top: `${currentMinutePercent}%` }}
+                  >
+                    <div className="w-2 h-2 rounded-full bg-orange animate-pulse" />
+                    <div className="flex-1 h-0.5 bg-orange/60" />
+                  </div>
+                )}
+
                 {/* Time label */}
                 <div className="w-16 flex-shrink-0 py-2 text-xs text-muted-foreground font-medium">
-                  {formatHour(slot.hour)}
+                  {formatHour(slot.startHour)}
+                  {slot.isFreeGroup && slot.freeSlotCount > 1 && (
+                    <span className="block text-[10px] opacity-60">
+                      to {formatHour(slot.endHour)}
+                    </span>
+                  )}
                 </div>
 
                 {/* Content */}
@@ -127,7 +222,7 @@ export function TodayTimetable({
                   {slot.block ? (
                     <div
                       onClick={() => onBlockClick(slot.block!)}
-                      style={{ height: getBlockHeight(slot.block.duration) }}
+                      style={{ height: '100%' }}
                       className={cn(
                         "rounded-xl px-3 py-2 cursor-pointer transition-all duration-200",
                         "hover:scale-[1.02] hover:shadow-md",
@@ -165,11 +260,17 @@ export function TodayTimetable({
                     </div>
                   ) : (
                     <div className={cn(
-                      "h-full rounded-xl border-2 border-dashed border-border/30",
+                      "h-full rounded-xl border border-dashed border-border/40",
                       "flex items-center justify-center text-xs text-muted-foreground/50",
                       !slot.isPast && "hover:border-primary/30 hover:bg-primary/5 transition-colors cursor-pointer"
                     )}>
-                      {!slot.isPast && "Free slot"}
+                      {!slot.isPast && (
+                        <span className="flex items-center gap-1">
+                          {slot.freeSlotCount > 1 
+                            ? `${slot.freeSlotCount}h free` 
+                            : 'Free slot'}
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>
@@ -179,11 +280,11 @@ export function TodayTimetable({
         </div>
       </div>
 
-      {/* Current time indicator */}
+      {/* Current time indicator badge */}
       {currentHour >= 6 && currentHour <= 22 && (
-        <div className="mt-2 flex items-center gap-2 text-xs text-primary">
-          <Clock className="w-3.5 h-3.5" />
-          <span>Current time: {formatHour(currentHour)}</span>
+        <div className="mt-2 flex items-center gap-2 text-xs bg-orange/10 text-orange px-3 py-1.5 rounded-full w-fit">
+          <div className="w-2 h-2 rounded-full bg-orange animate-pulse" />
+          <span className="font-medium">Now: {formatHour(currentHour)}</span>
         </div>
       )}
     </div>
