@@ -3,9 +3,9 @@ import { FloatingNav } from "./FloatingNav";
 
 export function BubbleLayout() {
   return (
-    <div className="h-screen overflow-hidden bg-cream">
+    <div className="h-screen w-full min-w-[100vw] overflow-hidden bg-cream">
       <FloatingNav />
-      <main className="h-full pt-20 pb-4 overflow-auto">
+      <main className="h-full w-full pt-20 pb-4 overflow-auto">
         <Outlet />
       </main>
     </div>
