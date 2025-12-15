@@ -183,40 +183,44 @@ export function useRoutineCompletion(blocks: RoutineBlock[]) {
 
   // Get current streak (consecutive days with all tasks completed)
   const currentStreak = useMemo(() => {
+    const hasAnyTaskBlocks = blocks.some((b) => b.category !== 'break');
+    if (!hasAnyTaskBlocks) return 0;
+
     let streak = 0;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     // Check from yesterday backwards (today might not be complete yet)
     const checkDate = new Date(today);
     checkDate.setDate(checkDate.getDate() - 1);
 
-    while (true) {
+    // Hard cap the number of days we look back to avoid infinite loops
+    let checkedDays = 0;
+    while (checkedDays < 370) {
+      checkedDays++;
+
       const tasks = getRoutineTasksForDate(checkDate);
       if (tasks.length === 0) {
         checkDate.setDate(checkDate.getDate() - 1);
         continue;
       }
-      
+
       if (tasks.every((t) => t.completed)) {
         streak++;
         checkDate.setDate(checkDate.getDate() - 1);
-      } else {
-        break;
+        continue;
       }
 
-      // Safety limit
-      if (streak > 365) break;
+      break;
     }
 
     // Also check if today is complete, add to streak
-    const todayTasks = todayRoutineTasks;
-    if (todayTasks.length > 0 && todayTasks.every((t) => t.completed)) {
+    if (todayRoutineTasks.length > 0 && todayRoutineTasks.every((t) => t.completed)) {
       streak++;
     }
 
     return streak;
-  }, [getRoutineTasksForDate, todayRoutineTasks]);
+  }, [blocks, getRoutineTasksForDate, todayRoutineTasks]);
 
   // Count productive days (days with at least one task completed)
   const productiveDays = useMemo(() => {
