@@ -35,7 +35,7 @@ export function FocusCard({
   };
 
   return (
-    <BentoCard className="col-span-1 md:col-span-2" colorVariant="lavender" delay={1}>
+    <BentoCard className="col-span-1 md:col-span-2" colorVariant="lavender" delay={1} elevated>
       <div className="flex flex-col items-center justify-center h-full py-4">
         <div className="flex items-center gap-2 mb-3">
           <div className={cn(
@@ -96,7 +96,8 @@ export function FocusCard({
           size="lg"
           className={cn(
             'rounded-full px-8 transition-all duration-400',
-            !isRunning && 'shadow-soft hover:shadow-glow'
+            !isRunning && 'shadow-soft hover:shadow-glow hover:scale-105 active:scale-95',
+            isRunning && 'hover:scale-105 active:scale-95'
           )}
         >
           {isRunning ? (
