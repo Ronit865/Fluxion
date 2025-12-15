@@ -1,15 +1,17 @@
 import { useMemo } from 'react';
 import { BentoCard } from './BentoCard';
 import { Task, FocusSession } from '@/types/fluxion';
+import { RoutineTaskCompletion } from '@/hooks/useRoutineCompletion';
 import { cn } from '@/lib/utils';
 
 interface HeatmapCardProps {
   tasks: Task[];
   sessions: FocusSession[];
+  routineCompletions?: RoutineTaskCompletion[];
   delay?: number;
 }
 
-export function HeatmapCard({ tasks, sessions, delay = 0 }: HeatmapCardProps) {
+export function HeatmapCard({ tasks, sessions, routineCompletions = [], delay = 0 }: HeatmapCardProps) {
   const heatmapData = useMemo(() => {
     const now = new Date();
     const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
@@ -20,9 +22,17 @@ export function HeatmapCard({ tasks, sessions, delay = 0 }: HeatmapCardProps) {
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = new Date(now.getFullYear(), now.getMonth(), day).toISOString().split('T')[0];
       
-      const tasksCompleted = tasks.filter(
-        (t) => t.completed && new Date(t.createdAt).toISOString().split('T')[0] === dateStr
+      // Count routine completions for this date
+      const routineTasksCompleted = routineCompletions.filter(
+        (c) => c.date === dateStr && c.completed
       ).length;
+      
+      // Fallback to legacy tasks if no routine completions
+      const tasksCompleted = routineTasksCompleted > 0 
+        ? routineTasksCompleted
+        : tasks.filter(
+            (t) => t.completed && new Date(t.createdAt).toISOString().split('T')[0] === dateStr
+          ).length;
       
       const focusMinutes = sessions
         .filter((s) => s.date === dateStr)
@@ -40,7 +50,7 @@ export function HeatmapCard({ tasks, sessions, delay = 0 }: HeatmapCardProps) {
     }
     
     return { data, firstDayOfMonth };
-  }, [tasks, sessions]);
+  }, [tasks, sessions, routineCompletions]);
 
   const intensityColors = [
     'bg-soft-green/20',

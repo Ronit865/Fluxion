@@ -4,13 +4,20 @@ import { FocusCard } from '@/components/dashboard/FocusCard';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { DeadlinesCard } from '@/components/dashboard/DeadlinesCard';
 import { HeatmapCard } from '@/components/dashboard/HeatmapCard';
-import { useTasks } from '@/hooks/useTasks';
+import { useRoutine } from '@/hooks/useRoutine';
+import { useRoutineCompletion } from '@/hooks/useRoutineCompletion';
 import { useFocusTimer } from '@/hooks/useFocusTimer';
-import { useStreak } from '@/hooks/useStreak';
 import { CheckCircle2, Flame, Clock, Target } from 'lucide-react';
 
 export default function Dashboard() {
-  const { tasks, todayTasks, completedToday, upcomingDeadlines, addTask, toggleTask, deleteTask } = useTasks();
+  const { blocks } = useRoutine();
+  const {
+    todayRoutineTasks,
+    todayCompletedCount,
+    toggleRoutineTaskCompletion,
+    currentStreak,
+    completions,
+  } = useRoutineCompletion(blocks);
   const {
     sessions,
     isRunning,
@@ -23,7 +30,6 @@ export default function Dashboard() {
     setCurrentCategory,
     formatTime,
   } = useFocusTimer();
-  const streak = useStreak(tasks, sessions);
 
   const formatHours = (minutes: number) => {
     const hrs = Math.floor(minutes / 60);
@@ -31,6 +37,20 @@ export default function Dashboard() {
     if (hrs > 0) return `${hrs}h ${mins}m`;
     return `${mins}m`;
   };
+
+  // Convert routine tasks to Task-like format for DeadlinesCard
+  // Since routine tasks don't have deadlines, we show upcoming tasks by time
+  const upcomingTasks = todayRoutineTasks
+    .filter((t) => !t.completed)
+    .slice(0, 5)
+    .map((t) => ({
+      id: t.id,
+      title: t.title,
+      category: t.category === 'break' ? 'personal' as const : t.category,
+      completed: t.completed,
+      deadline: undefined,
+      createdAt: new Date().toISOString(),
+    }));
 
   return (
     <MainLayout>
@@ -42,12 +62,11 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-4 gap-6 auto-rows-min">
-        {/* Task Card - Large */}
+        {/* Task Card - Shows today's routine tasks */}
         <TaskCard
-          tasks={todayTasks}
-          onAdd={addTask}
-          onToggle={toggleTask}
-          onDelete={deleteTask}
+          routineTasks={todayRoutineTasks}
+          completedCount={todayCompletedCount}
+          onToggle={toggleRoutineTaskCompletion}
         />
 
         {/* Focus Timer Card */}
@@ -65,7 +84,7 @@ export default function Dashboard() {
         {/* Stats Cards */}
         <StatsCard
           title="Tasks Completed"
-          value={completedToday}
+          value={todayCompletedCount}
           subtitle="today"
           icon={CheckCircle2}
           colorVariant="peach"
@@ -74,15 +93,15 @@ export default function Dashboard() {
 
         <StatsCard
           title="Current Streak"
-          value={streak}
-          subtitle={streak === 1 ? 'day' : 'days'}
+          value={currentStreak}
+          subtitle={currentStreak === 1 ? 'day' : 'days'}
           icon={Flame}
           colorVariant="pink"
           delay={3}
         />
 
-        {/* Deadlines Card */}
-        <DeadlinesCard deadlines={upcomingDeadlines} delay={4} />
+        {/* Deadlines Card - Shows upcoming uncompleted tasks */}
+        <DeadlinesCard deadlines={upcomingTasks} delay={4} />
 
         {/* Weekly Focus */}
         <StatsCard
@@ -94,8 +113,13 @@ export default function Dashboard() {
           delay={5}
         />
 
-        {/* Heatmap Card */}
-        <HeatmapCard tasks={tasks} sessions={sessions} delay={6} />
+        {/* Heatmap Card - Uses routine completions */}
+        <HeatmapCard 
+          tasks={[]} 
+          sessions={sessions} 
+          routineCompletions={completions}
+          delay={6} 
+        />
 
         {/* Goal Card */}
         <StatsCard
