@@ -117,7 +117,7 @@ export function AIGuidanceCard({
     }
 
     // Positive reinforcement
-    if (blocks.length >= 3 && totalScheduledHours <= availableHours && overdueTasks.length === 0) {
+    if (blocks.length >= 3 && totalScheduledHours <= availableHours && pastIncompleteTasks.length === 0) {
       result.push({
         id: 'good-progress',
         type: 'encouragement',
