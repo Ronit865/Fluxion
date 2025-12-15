@@ -7,9 +7,9 @@ import { AIGuidanceCard } from '@/components/routine/AIGuidanceCard';
 import { BlockFormModal } from '@/components/routine/BlockFormModal';
 import { BentoCard } from '@/components/dashboard/BentoCard';
 import { useRoutine } from '@/hooks/useRoutine';
-import { useTasks } from '@/hooks/useTasks';
+import { useRoutineCompletion } from '@/hooks/useRoutineCompletion';
 import { RoutineBlock } from '@/types/routine';
-import { Task, TaskCategory } from '@/types/fluxion';
+import { TaskCategory } from '@/types/fluxion';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
@@ -18,7 +18,7 @@ type RoutineCategory = TaskCategory | 'break';
 
 export default function Routine() {
   const { blocks, addBlock, updateBlock, deleteBlock, getBlocksForDay, hasConflict } = useRoutine();
-  const { tasks, toggleTask } = useTasks();
+  const { todayRoutineTasks, toggleRoutineTaskCompletion } = useRoutineCompletion(blocks);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBlock, setEditingBlock] = useState<RoutineBlock | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -100,30 +100,9 @@ export default function Routine() {
     });
   };
 
-  const handleMarkTaskComplete = (taskId: string) => {
-    toggleTask(taskId);
-    toast.success("Task marked complete");
-  };
-
-  const handleAddTaskToTimetable = (task: Task) => {
-    // Find next available slot
-    const nextHour = Math.max(currentHour + 1, 9);
-    if (!hasConflict(todayDayOfWeek, nextHour, 1)) {
-      addBlock(task.title, task.category, todayDayOfWeek, nextHour, 0, 1);
-      toast.success("Task added to timetable", {
-        description: `Scheduled for ${nextHour > 12 ? nextHour - 12 : nextHour} ${nextHour >= 12 ? 'PM' : 'AM'}`,
-      });
-    } else {
-      toast.error("No available slots", {
-        description: "Try a different time or clear some blocks.",
-      });
-    }
-  };
-
-  const handleDeferTask = (task: Task) => {
-    toast.info("Task deferred", {
-      description: "You can reschedule it for another day.",
-    });
+  const handleToggleRoutineTask = (blockId: string) => {
+    toggleRoutineTaskCompletion(blockId);
+    toast.success("Task updated");
   };
 
   const handleAISuggestionApply = (suggestionId: string) => {
@@ -171,8 +150,9 @@ export default function Routine() {
         <BentoCard className="lg:col-span-2 lg:row-span-2 min-h-[500px]" delay={0}>
           <TodayTimetable
             blocks={todayBlocks}
-            tasks={tasks}
+            routineTasks={todayRoutineTasks}
             onBlockClick={handleBlockClick}
+            onToggleTask={handleToggleRoutineTask}
             onGenerateAIPlan={handleGenerateAIPlan}
             onApplyPlan={handleApplyPlan}
             isGenerating={isGenerating}
@@ -181,25 +161,23 @@ export default function Routine() {
 
         {/* Day Summary Card */}
         <BentoCard className="min-h-[200px]" colorVariant="blue" delay={1}>
-          <DaySummaryCard blocks={todayBlocks} />
+          <DaySummaryCard blocks={todayBlocks} routineTasks={todayRoutineTasks} />
         </BentoCard>
 
         {/* AI Guidance Card */}
         <BentoCard className="min-h-[200px]" colorVariant="lavender" delay={2}>
           <AIGuidanceCard
             blocks={todayBlocks}
-            tasks={tasks}
+            routineTasks={todayRoutineTasks}
             onApply={handleAISuggestionApply}
           />
         </BentoCard>
 
-        {/* Pending Tasks Card - Full width on mobile, 2 columns on desktop */}
+        {/* Pending Tasks Card - Shows uncompleted routine tasks */}
         <BentoCard className="lg:col-span-2 min-h-[250px]" delay={3}>
           <PendingTasksCard
-            tasks={tasks}
-            onMarkComplete={handleMarkTaskComplete}
-            onAddToTimetable={handleAddTaskToTimetable}
-            onDefer={handleDeferTask}
+            routineTasks={todayRoutineTasks}
+            onMarkComplete={handleToggleRoutineTask}
           />
         </BentoCard>
 
@@ -208,7 +186,7 @@ export default function Routine() {
           <div className="h-full flex flex-col items-center justify-center text-center">
             <p className="text-sm text-muted-foreground mb-2">Quick tip</p>
             <p className="text-xs text-muted-foreground">
-              Drag tasks from Pending to your timetable to schedule them quickly.
+              Complete tasks here or on the Home page — they stay in sync.
             </p>
           </div>
         </BentoCard>

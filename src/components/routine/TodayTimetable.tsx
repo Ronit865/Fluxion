@@ -3,12 +3,13 @@ import { RoutineBlock, ROUTINE_CATEGORY_COLORS } from '@/types/routine';
 import { Button } from '@/components/ui/button';
 import { Sparkles, RefreshCw, Pencil, Clock, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Task, TaskCategory, CATEGORY_COLORS } from '@/types/fluxion';
+import { RoutineTask } from '@/hooks/useRoutineCompletion';
 
 interface TodayTimetableProps {
   blocks: RoutineBlock[];
-  tasks: Task[];
+  routineTasks: RoutineTask[];
   onBlockClick: (block: RoutineBlock) => void;
+  onToggleTask: (blockId: string) => void;
   onGenerateAIPlan: () => void;
   onApplyPlan: () => void;
   isGenerating?: boolean;
@@ -17,7 +18,6 @@ interface TodayTimetableProps {
 interface TimeSlot {
   hour: number;
   block?: RoutineBlock;
-  task?: Task;
   isPast: boolean;
   isCurrentHour: boolean;
 }
@@ -33,8 +33,9 @@ interface GroupedSlot {
 
 export function TodayTimetable({
   blocks,
-  tasks,
+  routineTasks,
   onBlockClick,
+  onToggleTask,
   onGenerateAIPlan,
   onApplyPlan,
   isGenerating = false,

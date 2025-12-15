@@ -6,17 +6,17 @@ import { CategoryPieChart } from '@/components/analytics/CategoryPieChart';
 import { MonthlyOverviewChart } from '@/components/analytics/MonthlyOverviewChart';
 import { AnalyticsStatCard } from '@/components/analytics/AnalyticsStatCard';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { useTasks } from '@/hooks/useTasks';
+import { useRoutine } from '@/hooks/useRoutine';
+import { useRoutineCompletion } from '@/hooks/useRoutineCompletion';
 import { useFocusTimer } from '@/hooks/useFocusTimer';
-import { useStreak } from '@/hooks/useStreak';
 import { Clock, CheckCircle2, Flame, Calendar, TrendingUp, Target } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Analytics() {
-  const { tasks } = useTasks();
+  const { blocks } = useRoutine();
+  const { completions, currentStreak } = useRoutineCompletion(blocks);
   const { sessions } = useFocusTimer();
-  const streak = useStreak(tasks, sessions);
-  const { last7Days, last30Days, categoryDistribution, totalStats } = useAnalytics(tasks, sessions);
+  const { last7Days, last30Days, categoryDistribution, totalStats } = useAnalytics(blocks, completions, sessions);
   const [timeRange, setTimeRange] = useState<'week' | 'month'>('week');
 
   return (
@@ -52,8 +52,8 @@ export default function Analytics() {
         />
         <AnalyticsStatCard
           title="Current Streak"
-          value={streak}
-          subtitle={streak === 1 ? 'day' : 'days'}
+          value={currentStreak}
+          subtitle={currentStreak === 1 ? 'day' : 'days'}
           icon={Flame}
           color="pink"
         />
