@@ -21,74 +21,87 @@ export default function Analytics() {
 
   return (
     <MainLayout>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-display text-foreground mb-1">Analytics</h1>
-          <p className="text-muted-foreground">Track your productivity trends</p>
+      <div className="page-transition">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-display text-foreground mb-1">Analytics</h1>
+            <p className="text-muted-foreground">Track your productivity trends</p>
+          </div>
+          <Tabs value={timeRange} onValueChange={(v) => setTimeRange(v as 'week' | 'month')}>
+            <TabsList className="bg-muted/60 border border-border/30 rounded-xl p-1">
+              <TabsTrigger value="week" className="rounded-lg px-4 data-[state=active]:bg-card data-[state=active]:shadow-soft">
+                Week
+              </TabsTrigger>
+              <TabsTrigger value="month" className="rounded-lg px-4 data-[state=active]:bg-card data-[state=active]:shadow-soft">
+                Month
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
-        <Tabs value={timeRange} onValueChange={(v) => setTimeRange(v as 'week' | 'month')}>
-          <TabsList>
-            <TabsTrigger value="week">Week</TabsTrigger>
-            <TabsTrigger value="month">Month</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-        <AnalyticsStatCard
-          title="Total Focus"
-          value={`${totalStats.totalFocusHours}h`}
-          subtitle="all time"
-          icon={Clock}
-          color="lavender"
-        />
-        <AnalyticsStatCard
-          title="Tasks Done"
-          value={totalStats.totalTasksCompleted}
-          subtitle="completed"
-          icon={CheckCircle2}
-          color="peach"
-        />
-        <AnalyticsStatCard
-          title="Current Streak"
-          value={currentStreak}
-          subtitle={currentStreak === 1 ? 'day' : 'days'}
-          icon={Flame}
-          color="pink"
-        />
-        <AnalyticsStatCard
-          title="Productive Days"
-          value={totalStats.productiveDays}
-          subtitle="total"
-          icon={Calendar}
-          color="blue"
-        />
-        <AnalyticsStatCard
-          title="Avg Focus/Day"
-          value={`${totalStats.avgDailyFocus}m`}
-          subtitle="this week"
-          icon={TrendingUp}
-          color="green"
-        />
-        <AnalyticsStatCard
-          title="Avg Tasks/Day"
-          value={totalStats.avgDailyTasks}
-          subtitle="this week"
-          icon={Target}
-          color="yellow"
-        />
-      </div>
+        {/* Stats Grid - Consistent color logic */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <AnalyticsStatCard
+            title="Total Focus"
+            value={`${totalStats.totalFocusHours}h`}
+            subtitle="all time"
+            icon={Clock}
+            color="cyan"
+            delay={0}
+          />
+          <AnalyticsStatCard
+            title="Tasks Done"
+            value={totalStats.totalTasksCompleted}
+            subtitle="completed"
+            icon={CheckCircle2}
+            color="peach"
+            delay={1}
+          />
+          <AnalyticsStatCard
+            title="Current Streak"
+            value={currentStreak}
+            subtitle={currentStreak === 1 ? 'day' : 'days'}
+            icon={Flame}
+            color="yellow"
+            delay={2}
+          />
+          <AnalyticsStatCard
+            title="Productive Days"
+            value={totalStats.productiveDays}
+            subtitle="total"
+            icon={Calendar}
+            color="lavender"
+            delay={3}
+          />
+          <AnalyticsStatCard
+            title="Avg Focus/Day"
+            value={`${totalStats.avgDailyFocus}m`}
+            subtitle="this week"
+            icon={TrendingUp}
+            color="blue"
+            delay={4}
+          />
+          <AnalyticsStatCard
+            title="Avg Tasks/Day"
+            value={totalStats.avgDailyTasks}
+            subtitle="this week"
+            icon={Target}
+            color="green"
+            delay={5}
+          />
+        </div>
 
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <FocusChart data={timeRange === 'week' ? last7Days : last30Days} type={timeRange === 'week' ? 'daily' : 'weekly'} />
-        <TaskTrendChart data={timeRange === 'week' ? last7Days : last30Days} />
-      </div>
+        {/* Charts Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+          <FocusChart data={timeRange === 'week' ? last7Days : last30Days} type={timeRange === 'week' ? 'daily' : 'weekly'} />
+          <TaskTrendChart data={timeRange === 'week' ? last7Days : last30Days} />
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <CategoryPieChart data={categoryDistribution} />
-        <MonthlyOverviewChart data={last30Days} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <CategoryPieChart data={categoryDistribution} />
+          <MonthlyOverviewChart data={last30Days} />
+        </div>
       </div>
     </MainLayout>
   );

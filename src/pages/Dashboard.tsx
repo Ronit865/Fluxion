@@ -39,7 +39,6 @@ export default function Dashboard() {
   };
 
   // Convert routine tasks to Task-like format for DeadlinesCard
-  // Since routine tasks don't have deadlines, we show upcoming tasks by time
   const upcomingTasks = todayRoutineTasks
     .filter((t) => !t.completed)
     .slice(0, 5)
@@ -54,82 +53,86 @@ export default function Dashboard() {
 
   return (
     <MainLayout>
-      <div className="mb-8">
-        <h1 className="text-3xl font-display text-foreground mb-1">Good day!</h1>
-        <p className="text-muted-foreground">
-          {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-        </p>
-      </div>
+      <div className="page-transition">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-display text-foreground mb-1">Good day!</h1>
+          <p className="text-muted-foreground">
+            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+          </p>
+        </div>
 
-      <div className="grid grid-cols-4 gap-6 auto-rows-min">
-        {/* Task Card - Shows today's routine tasks */}
-        <TaskCard
-          routineTasks={todayRoutineTasks}
-          completedCount={todayCompletedCount}
-          onToggle={toggleRoutineTaskCompletion}
-        />
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 auto-rows-min">
+          {/* Task Card - Large primary card */}
+          <TaskCard
+            routineTasks={todayRoutineTasks}
+            completedCount={todayCompletedCount}
+            onToggle={toggleRoutineTaskCompletion}
+          />
 
-        {/* Focus Timer Card */}
-        <FocusCard
-          isRunning={isRunning}
-          currentSeconds={currentSeconds}
-          currentCategory={currentCategory}
-          todayFocusMinutes={todayFocusMinutes}
-          onStart={startTimer}
-          onStop={stopTimer}
-          onCategoryChange={setCurrentCategory}
-          formatTime={formatTime}
-        />
+          {/* Focus Timer Card - Feature card */}
+          <FocusCard
+            isRunning={isRunning}
+            currentSeconds={currentSeconds}
+            currentCategory={currentCategory}
+            todayFocusMinutes={todayFocusMinutes}
+            onStart={startTimer}
+            onStop={stopTimer}
+            onCategoryChange={setCurrentCategory}
+            formatTime={formatTime}
+          />
 
-        {/* Stats Cards */}
-        <StatsCard
-          title="Tasks Completed"
-          value={todayCompletedCount}
-          subtitle="today"
-          icon={CheckCircle2}
-          colorVariant="peach"
-          delay={2}
-        />
+          {/* Stats Cards - Warm tones for tasks/routine */}
+          <StatsCard
+            title="Tasks Done"
+            value={todayCompletedCount}
+            subtitle="today"
+            icon={CheckCircle2}
+            colorVariant="peach"
+            delay={2}
+          />
 
-        <StatsCard
-          title="Current Streak"
-          value={currentStreak}
-          subtitle={currentStreak === 1 ? 'day' : 'days'}
-          icon={Flame}
-          colorVariant="pink"
-          delay={3}
-        />
+          <StatsCard
+            title="Current Streak"
+            value={currentStreak}
+            subtitle={currentStreak === 1 ? 'day' : 'days'}
+            icon={Flame}
+            colorVariant="yellow"
+            delay={3}
+          />
 
-        {/* Deadlines Card - Shows upcoming uncompleted tasks */}
-        <DeadlinesCard deadlines={upcomingTasks} delay={4} />
+          {/* Deadlines Card */}
+          <DeadlinesCard deadlines={upcomingTasks} delay={4} />
 
-        {/* Weekly Focus */}
-        <StatsCard
-          title="Weekly Focus"
-          value={formatHours(weekFocusMinutes)}
-          subtitle="this week"
-          icon={Clock}
-          colorVariant="blue"
-          delay={5}
-        />
+          {/* Cool tones for focus/analytics */}
+          <StatsCard
+            title="Weekly Focus"
+            value={formatHours(weekFocusMinutes)}
+            subtitle="this week"
+            icon={Clock}
+            colorVariant="cyan"
+            delay={5}
+          />
 
-        {/* Heatmap Card - Uses routine completions */}
-        <HeatmapCard 
-          tasks={[]} 
-          sessions={sessions} 
-          routineCompletions={completions}
-          delay={6} 
-        />
+          {/* Heatmap Card - Spans 2 columns on larger screens */}
+          <HeatmapCard 
+            tasks={[]} 
+            sessions={sessions} 
+            routineCompletions={completions}
+            delay={6} 
+          />
 
-        {/* Goal Card */}
-        <StatsCard
-          title="Daily Goal"
-          value={`${Math.round((todayFocusMinutes / 120) * 100)}%`}
-          subtitle="2h target"
-          icon={Target}
-          colorVariant="green"
-          delay={7}
-        />
+          {/* Goal Card */}
+          <StatsCard
+            title="Daily Goal"
+            value={`${Math.round((todayFocusMinutes / 120) * 100)}%`}
+            subtitle="2h target"
+            icon={Target}
+            colorVariant="green"
+            delay={7}
+          />
+        </div>
       </div>
     </MainLayout>
   );

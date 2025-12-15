@@ -3,6 +3,7 @@ import { BentoCard } from './BentoCard';
 import { Task, FocusSession } from '@/types/fluxion';
 import { RoutineTaskCompletion } from '@/hooks/useRoutineCompletion';
 import { cn } from '@/lib/utils';
+import { Activity } from 'lucide-react';
 
 interface HeatmapCardProps {
   tasks: Task[];
@@ -66,11 +67,16 @@ export function HeatmapCard({ tasks, sessions, routineCompletions = [], delay = 
   return (
     <BentoCard colorVariant="green" delay={delay}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-soft-green-foreground">{monthName} Activity</h3>
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-soft-green-foreground/10">
+            <Activity className="w-4 h-4 text-soft-green-foreground" />
+          </div>
+          <h3 className="text-sm font-medium text-soft-green-foreground">{monthName}</h3>
+        </div>
         <div className="flex items-center gap-1 text-xs text-soft-green-foreground/60">
           <span>Less</span>
           {intensityColors.map((color, i) => (
-            <div key={i} className={cn('w-3 h-3 rounded-sm', color)} />
+            <div key={i} className={cn('w-2.5 h-2.5 rounded-sm', color)} />
           ))}
           <span>More</span>
         </div>
@@ -88,11 +94,11 @@ export function HeatmapCard({ tasks, sessions, routineCompletions = [], delay = 
           <div key={`empty-${i}`} className="aspect-square" />
         ))}
         
-        {heatmapData.data.map((day, i) => (
+        {heatmapData.data.map((day) => (
           <div
             key={day.date}
             className={cn(
-              'aspect-square rounded-sm transition-all hover:scale-110',
+              'aspect-square rounded-[4px] transition-all duration-300 hover:scale-125 cursor-default',
               intensityColors[day.intensity]
             )}
             title={`${day.date}: Level ${day.intensity}`}
