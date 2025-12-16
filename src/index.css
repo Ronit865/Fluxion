@@ -141,6 +141,10 @@
 
 @layer base {
   * { @apply border-border; }
+  html, body, #root { 
+    @apply overflow-x-hidden;
+    max-width: 100%;
+  }
   body { 
     @apply bg-background text-foreground antialiased; 
     font-family: 'Plus Jakarta Sans', 'SF Pro Display', system-ui, -apple-system, sans-serif;
