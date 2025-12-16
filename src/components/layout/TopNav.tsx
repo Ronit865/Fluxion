@@ -42,7 +42,7 @@ export function TopNav() {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-border/20"
     >
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="w-full px-6 md:px-10 lg:px-16 h-16 flex items-center justify-between">
         {/* Logo - Wordmark Style */}
         <NavLink to="/" className="group flex items-center gap-2.5">
           <motion.div 
